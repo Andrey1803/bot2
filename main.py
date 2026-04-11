@@ -71,47 +71,48 @@ def _init_data_files():
     """Инициализирует файлы данных. Всегда проверяет и восстанавливает при необходимости."""
     os.makedirs("data", exist_ok=True)
 
-    logger.info(f"🔍 Проверка {USER_FILE}...")
+    print(f"🔍 Проверка {USER_FILE}...")
 
     needs_restore = False
     if not os.path.exists(USER_FILE):
-        logger.info("⚠️ users.json не существует — восстановим")
+        print("⚠️ users.json не существует — восстановим")
         needs_restore = True
     else:
         size = os.path.getsize(USER_FILE)
-        logger.info(f"📊 users.json размер: {size} байт")
+        print(f"📊 users.json размер: {size} байт")
         if size == 0:
-            logger.info("⚠️ users.json пустой (0 байт) — восстановим")
+            print("⚠️ users.json пустой (0 байт) — восстановим")
             needs_restore = True
         else:
             try:
                 with open(USER_FILE, "r", encoding="utf-8") as f:
                     content = f.read().strip()
-                logger.info(f"📄 users.json содержимое: {content[:100]}...")
+                print(f"📄 users.json содержимое: {content[:100]}...")
                 if not content or content == "{}" or content == "[]":
-                    logger.info("⚠️ users.json пустой ({}) — восстановим")
+                    print("⚠️ users.json пустой ({}) — восстановим")
                     needs_restore = True
                 else:
                     data = json.loads(content)
-                    logger.info(f"👥 Текущих пользователей: {len(data)}")
+                    print(f"👥 Текущих пользователей: {len(data)}")
                     if len(data) < 2:
-                        logger.info("⚠️ Мало пользователей — восстановим")
+                        print("⚠️ Мало пользователей — восстановим")
                         needs_restore = True
             except Exception as e:
-                logger.warning(f"⚠️ Ошибка чтения users.json: {e} — восстановим")
+                print(f"⚠️ Ошибка чтения users.json: {e} — восстановим")
                 needs_restore = True
 
     if needs_restore:
         with open(USER_FILE, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
-        logger.info(f"✅ users.json восстановлен: {len(DEFAULT_USERS)} пользователей")
+        print(f"✅ users.json восстановлен: {len(DEFAULT_USERS)} пользователей")
     else:
-        logger.info("✅ users.json в порядке")
+        print("✅ users.json в порядке")
 
     if not os.path.exists(ORDER_LOG):
         with open(ORDER_LOG, "w", encoding="utf-8") as f:
             f.write("")
 
+# Вызываем до настройки логирования, используем print
 _init_data_files()
 
 # ─── Бот и диспетчер ─────────────────────────────────────────────────────────
