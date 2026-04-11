@@ -68,24 +68,35 @@ DEFAULT_USERS = {
 }
 
 def _init_data_files():
-    """Инициализирует файлы данных. Если users.json пуст — восстанавливает из бэкапа."""
+    """Инициализирует файлы данных. Если users.json пустой или мало пользователей — восстанавливает из бэкапа."""
     os.makedirs("data", exist_ok=True)
 
-    if not os.path.exists(USER_FILE) or os.path.getsize(USER_FILE) == 0:
-        # Пустой Volume — восстанавливаем из встроенного бэкапа
-        with open(USER_FILE, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
-        logger.info("📋 users.json восстановлен из бэкапа (15 пользователей)")
+    needs_restore = False
+    if not os.path.exists(USER_FILE):
+        needs_restore = True
+    elif os.path.getsize(USER_FILE) == 0:
+        needs_restore = True
     else:
         try:
             with open(USER_FILE, "r", encoding="utf-8") as f:
                 content = f.read().strip()
-                if not content or content == "{}":
-                    with open(USER_FILE, "w", encoding="utf-8") as fw:
-                        json.dump(DEFAULT_USERS, fw, ensure_ascii=False, indent=2)
-                    logger.info("📋 users.json восстановлен из бэкапа (был пустой)")
+                if not content or content == "{}" or content == "[]":
+                    needs_restore = True
+                else:
+                    data = json.loads(content)
+                    if len(data) < 2:
+                        needs_restore = True
         except Exception:
-            pass
+            needs_restore = True
+
+    if needs_restore:
+        with open(USER_FILE, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
+        logger.info(f"📋 users.json восстановлен из бэкапа ({len(DEFAULT_USERS)} пользователей)")
+    else:
+        with open(USER_FILE, "r", encoding="utf-8") as f:
+            count = len(json.load(f))
+        logger.info(f"📋 users.json загружен ({count} пользователей)")
 
     if not os.path.exists(ORDER_LOG):
         with open(ORDER_LOG, "w", encoding="utf-8") as f:
