@@ -48,13 +48,50 @@ USER_FILE = "data/users.json"
 ORDER_LOG = "data/orders.log"
 
 # ─── Инициализация файлов данных ─────────────────────────────────────────────
-if not os.path.exists(USER_FILE):
-    with open(USER_FILE, "w", encoding="utf-8") as f:
-        json.dump({}, f, ensure_ascii=False, indent=2)
+# ─── Резервная копия пользователей (для инициализации пустого Volume) ────────
+DEFAULT_USERS = {
+    "5567898807": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "вцьоащц", "reminder_sent": False, "phone": "+375291472109", "last_order_id": None, "ratings": []},
+    "5185948718": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ната", "reminder_sent": False, "phone": "+375447408978", "last_order_id": None, "ratings": []},
+    "7599242480": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Козырева Майя", "reminder_sent": False, "phone": "+375295034840", "last_order_id": None, "ratings": []},
+    "6445132705": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "phone": "+375293608308", "last_order_id": None, "ratings": []},
+    "449621760": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Гаврош", "reminder_sent": False, "phone": "+375447779866", "last_order_id": None, "ratings": []},
+    "586923354": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Виктор", "reminder_sent": False, "phone": "+375296160955", "last_order_id": None, "ratings": []},
+    "750303531": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Игорь", "reminder_sent": False, "phone": "+375296317433", "last_order_id": None, "ratings": []},
+    "508334961": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Сергей", "reminder_sent": False, "phone": "+375296772018", "last_order_id": None, "ratings": []},
+    "650648039": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ирина", "reminder_sent": False, "phone": "+375293697683", "last_order_id": None, "ratings": []},
+    "1243322312": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Вячеслав Глеб", "reminder_sent": False, "phone": "+375296562038", "last_order_id": None, "ratings": []},
+    "486713249": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Павел", "reminder_sent": False, "phone": "+375296465638", "last_order_id": None, "ratings": []},
+    "460143593": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Александр", "reminder_sent": False, "phone": "+375296499005", "last_order_id": None, "ratings": []},
+    "432775666": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "phone": "+375296450385", "last_order_id": None, "ratings": []},
+    "515325398": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Василий", "reminder_sent": False, "phone": "+375296344480", "last_order_id": None, "ratings": []},
+    "814067080": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Анна", "reminder_sent": False, "phone": "+375293101429", "last_order_id": None, "ratings": []},
+}
 
-if not os.path.exists(ORDER_LOG):
-    with open(ORDER_LOG, "w", encoding="utf-8") as f:
-        f.write("")
+def _init_data_files():
+    """Инициализирует файлы данных. Если users.json пуст — восстанавливает из бэкапа."""
+    os.makedirs("data", exist_ok=True)
+
+    if not os.path.exists(USER_FILE) or os.path.getsize(USER_FILE) == 0:
+        # Пустой Volume — восстанавливаем из встроенного бэкапа
+        with open(USER_FILE, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
+        logger.info("📋 users.json восстановлен из бэкапа (15 пользователей)")
+    else:
+        try:
+            with open(USER_FILE, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if not content or content == "{}":
+                    with open(USER_FILE, "w", encoding="utf-8") as fw:
+                        json.dump(DEFAULT_USERS, fw, ensure_ascii=False, indent=2)
+                    logger.info("📋 users.json восстановлен из бэкапа (был пустой)")
+        except Exception:
+            pass
+
+    if not os.path.exists(ORDER_LOG):
+        with open(ORDER_LOG, "w", encoding="utf-8") as f:
+            f.write("")
+
+_init_data_files()
 
 # ─── Бот и диспетчер ─────────────────────────────────────────────────────────
 bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
