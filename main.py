@@ -68,35 +68,45 @@ DEFAULT_USERS = {
 }
 
 def _init_data_files():
-    """Инициализирует файлы данных. Если users.json пустой или мало пользователей — восстанавливает из бэкапа."""
+    """Инициализирует файлы данных. Всегда проверяет и восстанавливает при необходимости."""
     os.makedirs("data", exist_ok=True)
+
+    logger.info(f"🔍 Проверка {USER_FILE}...")
 
     needs_restore = False
     if not os.path.exists(USER_FILE):
-        needs_restore = True
-    elif os.path.getsize(USER_FILE) == 0:
+        logger.info("⚠️ users.json не существует — восстановим")
         needs_restore = True
     else:
-        try:
-            with open(USER_FILE, "r", encoding="utf-8") as f:
-                content = f.read().strip()
+        size = os.path.getsize(USER_FILE)
+        logger.info(f"📊 users.json размер: {size} байт")
+        if size == 0:
+            logger.info("⚠️ users.json пустой (0 байт) — восстановим")
+            needs_restore = True
+        else:
+            try:
+                with open(USER_FILE, "r", encoding="utf-8") as f:
+                    content = f.read().strip()
+                logger.info(f"📄 users.json содержимое: {content[:100]}...")
                 if not content or content == "{}" or content == "[]":
+                    logger.info("⚠️ users.json пустой ({}) — восстановим")
                     needs_restore = True
                 else:
                     data = json.loads(content)
+                    logger.info(f"👥 Текущих пользователей: {len(data)}")
                     if len(data) < 2:
+                        logger.info("⚠️ Мало пользователей — восстановим")
                         needs_restore = True
-        except Exception:
-            needs_restore = True
+            except Exception as e:
+                logger.warning(f"⚠️ Ошибка чтения users.json: {e} — восстановим")
+                needs_restore = True
 
     if needs_restore:
         with open(USER_FILE, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
-        logger.info(f"📋 users.json восстановлен из бэкапа ({len(DEFAULT_USERS)} пользователей)")
+        logger.info(f"✅ users.json восстановлен: {len(DEFAULT_USERS)} пользователей")
     else:
-        with open(USER_FILE, "r", encoding="utf-8") as f:
-            count = len(json.load(f))
-        logger.info(f"📋 users.json загружен ({count} пользователей)")
+        logger.info("✅ users.json в порядке")
 
     if not os.path.exists(ORDER_LOG):
         with open(ORDER_LOG, "w", encoding="utf-8") as f:
