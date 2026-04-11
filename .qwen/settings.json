@@ -7,7 +7,13 @@
       "Bash(findstr *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(git branch *)",
+      "Bash(tasklist)",
+      "Bash(taskkill *)",
+      "Bash(where *)",
+      "Bash(npm install *)",
+      "Bash(dir *)"
     ]
   },
   "$version": 3

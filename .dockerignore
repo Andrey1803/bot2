@@ -21,6 +21,9 @@ env/
 .DS_Store
 Thumbs.db
 
+# Qwen
+.qwen/
+
 # Git
 .git/
 .gitignore
