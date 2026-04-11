@@ -4,6 +4,7 @@ import re
 import json
 import os
 import signal
+import sys
 from datetime import datetime, timedelta, timezone
 from contextlib import asynccontextmanager
 from collections import Counter
@@ -68,10 +69,12 @@ DEFAULT_USERS = {
 }
 
 def _init_data_files():
-    """Инициализирует файлы данных. Всегда проверяет и восстанавливает при необходимости."""
+    """Инициализирует файлы данных."""
     os.makedirs("data", exist_ok=True)
-
-    print(f"🔍 Проверка {USER_FILE}...")
+    
+    print(f"🐍 PWD: {os.getcwd()}")
+    print(f"📂 Files in data/: {os.listdir('data')}")
+    sys.stdout.flush()
 
     needs_restore = False
     if not os.path.exists(USER_FILE):
@@ -89,7 +92,7 @@ def _init_data_files():
                     content = f.read().strip()
                 print(f"📄 users.json содержимое: {content[:100]}...")
                 if not content or content == "{}" or content == "[]":
-                    print("⚠️ users.json пустой ({}) — восстановим")
+                    print("⚠️ users.json пустой — восстановим")
                     needs_restore = True
                 else:
                     data = json.loads(content)
@@ -102,15 +105,14 @@ def _init_data_files():
                 needs_restore = True
 
     if needs_restore:
+        print("🔨 ЗАПИСЬ USERS.JSON...")
         with open(USER_FILE, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
         print(f"✅ users.json восстановлен: {len(DEFAULT_USERS)} пользователей")
     else:
         print("✅ users.json в порядке")
-
-    if not os.path.exists(ORDER_LOG):
-        with open(ORDER_LOG, "w", encoding="utf-8") as f:
-            f.write("")
+    
+    sys.stdout.flush()
 
 # Вызываем до настройки логирования, используем print
 _init_data_files()

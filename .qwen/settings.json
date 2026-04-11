@@ -13,7 +13,10 @@
       "Bash(taskkill *)",
       "Bash(where *)",
       "Bash(npm install *)",
-      "Bash(dir *)"
+      "Bash(dir *)",
+      "Bash(curl *)",
+      "Bash(powershell *)",
+      "WebFetch(github.com)"
     ]
   },
   "$version": 3
