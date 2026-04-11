@@ -25,10 +25,6 @@ Thumbs.db
 .git/
 .gitignore
 
-# Данные (не нужны в контейнере)
-data/*.json
-data/*.log
-
 # Docker
 Dockerfile
 docker-compose*.yml
