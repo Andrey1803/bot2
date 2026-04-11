@@ -1,0 +1,39 @@
+# Секреты и конфигурация
+.env
+.env.local
+.env.production
+
+# Данные пользователей (содержат персональные данные)
+data/users.json
+data/orders.log
+data/*.json
+data/*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Виртуальное окружение
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Railway
+.railway/
