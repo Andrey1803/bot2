@@ -74,17 +74,32 @@ def get_tasks_for_stats(days: int = 30) -> list:
 
 def get_all_board_tasks(board_id: str) -> list:
     """
-    Получает все задачи с конкретной доски через эндпоинт /boards/{id}/tasks.
+    Получает все задачи с конкретной доски.
+    YouGile API v2: /tasks?limit=N (возвращает все задачи с доступных досок)
     """
-    url = f"{API_URL}/boards/{board_id}/tasks"
-    params = {"limit": 500}
-    response = requests.get(url, headers=_headers(), params=params)
-    if response.status_code in (200, 201):
+    url = f"{API_URL}/tasks"
+    all_tasks = []
+    offset = 0
+    batch_size = 100
+
+    while True:
+        params = {"limit": batch_size, "offset": offset}
+        response = requests.get(url, headers=_headers(), params=params)
+        if response.status_code not in (200, 201):
+            raise Exception(f"{response.status_code} {response.text}")
+
         data = response.json()
         tasks = data if isinstance(data, list) else data.get("tasks", [])
-        return tasks
-    else:
-        raise Exception(f"{response.status_code} {response.text}")
+        if not tasks:
+            break
+        all_tasks.extend(tasks)
+        offset += batch_size
+        if len(tasks) < batch_size:
+            break
+        if offset > 10000:  # защита от бесконечного цикла
+            break
+
+    return all_tasks
 
 
 def get_column_name(column_id: str) -> str:
