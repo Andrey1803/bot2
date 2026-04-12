@@ -74,31 +74,45 @@ def get_tasks_for_stats(days: int = 30) -> list:
 
 def get_all_board_tasks(board_id: str) -> list:
     """
-    Получает все задачи с конкретной доски.
-    YouGile API v2: /tasks?limit=N (возвращает все задачи с доступных досок)
+    Получает все задачи. YouGile API v2 может не поддерживать листинг.
+    Пробуем все известные эндпоинты.
     """
-    url = f"{API_URL}/tasks"
+    from config import COLUMN_ID
+    import logging
+    logger = logging.getLogger(__name__)
+    
     all_tasks = []
-    offset = 0
-    batch_size = 100
-
-    while True:
-        params = {"limit": batch_size, "offset": offset}
-        response = requests.get(url, headers=_headers(), params=params)
-        if response.status_code not in (200, 201):
-            raise Exception(f"{response.status_code} {response.text}")
-
-        data = response.json()
-        tasks = data if isinstance(data, list) else data.get("tasks", [])
-        if not tasks:
-            break
-        all_tasks.extend(tasks)
-        offset += batch_size
-        if len(tasks) < batch_size:
-            break
-        if offset > 10000:  # защита от бесконечного цикла
-            break
-
+    seen_ids = set()
+    
+    urls_to_try = [
+        f"{API_URL}/tasks",
+        f"{API_URL}/columns/{COLUMN_ID}/tasks",
+        f"{API_URL}/tasks?limit=100",
+    ]
+    
+    for url in urls_to_try:
+        try:
+            response = requests.get(url, headers=_headers(), timeout=10)
+            logger.info(f"🔍 YouGile GET {url} → {response.status_code}")
+            if response.status_code in (200, 201):
+                data = response.json()
+                logger.info(f"📋 Response keys: {list(data.keys()) if isinstance(data, dict) else 'list'}")
+                tasks = data if isinstance(data, list) else data.get("tasks", data.get("items", data.get("columns", [])))
+                if isinstance(tasks, list):
+                    for t in tasks:
+                        tid = t.get("id")
+                        if tid and tid not in seen_ids:
+                            all_tasks.append(t)
+                            seen_ids.add(tid)
+                    logger.info(f"✅ Found {len(all_tasks)} tasks via {url}")
+                    if len(all_tasks) > 0:
+                        return all_tasks
+                elif isinstance(tasks, dict):
+                    logger.info(f"📋 Tasks dict keys: {list(tasks.keys())}")
+        except Exception as e:
+            logger.warning(f"❌ Failed {url}: {e}")
+            continue
+    
     return all_tasks
 
 
