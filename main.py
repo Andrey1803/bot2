@@ -166,14 +166,33 @@ def skip_inline_kb():
 
 
 def main_menu_kb(user_data: dict = None):
-    """Главное меню. Если есть телефон — показываем кнопку повтора заказа."""
+    """Главное меню. Если админ — показываем админ-панель."""
     buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
 
     # Если у пользователя есть сохранённый телефон — предлагаем повтор
     if user_data and user_data.get("phone"):
         buttons.append([KeyboardButton(text="🔄 Повторить заказ")])
 
-    buttons.append([KeyboardButton(text="📊 Мои заказы")])
+    buttons.append([KeyboardButton(text="📋 Мои заказы")])
+    buttons.append([KeyboardButton(text="👤 Мой профиль")])
+
+    # Админ-кнопки
+    if user_data and str(user_data.get("_user_id")) == str(ADMIN_ID):
+        buttons.append([
+            KeyboardButton(text="🛡️ Админ-панель")
+        ])
+
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+
+def admin_panel_kb():
+    """Клавиатура админ-панели."""
+    buttons = [
+        [KeyboardButton(text="👥 Пользователи"), KeyboardButton(text="📊 Статистика")],
+        [KeyboardButton(text="🔧 ТО статус"), KeyboardButton(text="📢 Рассылка")],
+        [KeyboardButton(text="📥 Экспорт CSV")],
+        [KeyboardButton(text="🔙 Назад")],
+    ]
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
@@ -413,6 +432,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await save_users(users)
 
     user_data = users[user_id]
+    user_data["_user_id"] = user_id  # для проверки админа в main_menu_kb
     next_maint = calc_next_maintenance(user_data.get("joined"))
     maint_info = ""
     if next_maint:
@@ -1160,8 +1180,76 @@ async def cancel_order(message: types.Message, state: FSMContext):
     await message.answer("Оформление заказа отменено.", reply_markup=main_menu_kb(user_data))
 
 
+# ─── Кнопки главного меню ──────────────────────────────────────────────────
+@dp.message(F.text == "👤 Мой профиль")
+async def btn_profile(message: types.Message):
+    await cmd_profile(message)
+
+
+@dp.message(F.text == "🛡️ Админ-панель")
+async def btn_admin_panel(message: types.Message):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Доступ запрещён.")
+        return
+    await message.answer("🛡️ <b>Админ-панель</b>\nВыберите действие:", reply_markup=admin_panel_kb())
+
+
+@dp.message(F.text == "🔙 Назад")
+async def btn_back(message: types.Message):
+    users = await load_users()
+    user_data = users.get(str(message.from_user.id), {})
+    user_data["_user_id"] = str(message.from_user.id)
+    await message.answer("📋 Главное меню:", reply_markup=main_menu_kb(user_data))
+
+
+@dp.message(F.text == "👥 Пользователи")
+async def btn_users(message: types.Message):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await list_users(message)
+
+
+@dp.message(F.text == "📊 Статистика")
+async def btn_stats(message: types.Message):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await cmd_stats(message)
+
+
+@dp.message(F.text == "🔧 ТО статус")
+async def btn_maintenance(message: types.Message):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await cmd_maintenance(message)
+
+
+@dp.message(F.text == "📢 Рассылка")
+async def btn_broadcast(message: types.Message, state: FSMContext):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await message.answer(
+        "📢 <b>Режим рассылки</b>\n"
+        "Отправьте сообщение, которое нужно разослать всем пользователям.\n"
+        "Для отмены введите /cancel или нажмите «🔙 Назад».",
+        reply_markup=admin_panel_kb()
+    )
+    await state.set_state(BroadcastForm.message)
+
+
+@dp.message(F.text == "📥 Экспорт CSV")
+async def btn_export(message: types.Message):
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await cmd_export(message)
+
+
 # ─── Фича: Мои заказы (история) ─────────────────────────────────────────────
-@dp.message(F.text == "📊 Мои заказы")
+@dp.message(F.text == "📋 Мои заказы")
 async def my_orders(message: types.Message):
     user_id = str(message.from_user.id)
 
