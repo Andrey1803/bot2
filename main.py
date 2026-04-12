@@ -176,11 +176,22 @@ def main_menu_kb(user_data: dict = None):
     buttons.append([KeyboardButton(text="📋 Мои заказы")])
     buttons.append([KeyboardButton(text="👤 Мой профиль")])
 
-    # Админ-кнопки
-    if user_data and str(user_data.get("_user_id")) == str(ADMIN_ID):
-        buttons.append([
-            KeyboardButton(text="🛡️ Админ-панель")
-        ])
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+
+def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
+    """Главное меню с проверкой админа по user_id."""
+    buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
+
+    if user_data and user_data.get("phone"):
+        buttons.append([KeyboardButton(text="🔄 Повторить заказ")])
+
+    buttons.append([KeyboardButton(text="📋 Мои заказы")])
+    buttons.append([KeyboardButton(text="👤 Мой профиль")])
+
+    # Админ-кнопка — проверка по реальному ID
+    if str(user_id) == str(ADMIN_ID):
+        buttons.append([KeyboardButton(text="🛡️ Админ-панель")])
 
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
@@ -432,7 +443,6 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await save_users(users)
 
     user_data = users[user_id]
-    user_data["_user_id"] = user_id  # для проверки админа в main_menu_kb
     next_maint = calc_next_maintenance(user_data.get("joined"))
     maint_info = ""
     if next_maint:
@@ -443,7 +453,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
         "Я приму ваш заказ и передам менеджеру.\n"
         "Нажмите кнопку ниже, чтобы оформить заявку."
         f"{maint_info}",
-        reply_markup=main_menu_kb(user_data)
+        reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
     )
 
 
@@ -475,7 +485,7 @@ async def cmd_help(message: types.Message):
         "• Мои заказы — история заказов\n\n"
         "🕐 Часы работы: 08:00 — 20:00\n"
         f"{maint_info}",
-        reply_markup=main_menu_kb(user_data)
+        reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
     )
 
 
@@ -516,7 +526,7 @@ async def cmd_profile(message: types.Message):
         f"Статус: {maint_status}"
     )
 
-    await message.answer(text, reply_markup=main_menu_kb(user_data))
+    await message.answer(text, reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
 
 
 # ─── Фича 2: Статус заказа ──────────────────────────────────────────────────
@@ -920,13 +930,13 @@ async def confirm_repeat_order(message: types.Message):
         await message.answer(
             f"✅ Повторный заказ принят!\n"
             f"📋 ID задачи: <code>{task.get('id', '—')}</code>",
-            reply_markup=main_menu_kb(user_data)
+            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
     except Exception as e:
         logger.exception("❌ Ошибка при создании задачи в YouGile")
         await message.answer(
             f"⚠️ Заказ принят, но ошибка в YouGile: {e}",
-            reply_markup=main_menu_kb(user_data)
+            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
 
     # Очищаем FSM
@@ -1168,7 +1178,7 @@ async def finalize_order(message: types.Message, state: FSMContext):
 
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
-    await message.answer(response_text, reply_markup=main_menu_kb(user_data))
+    await message.answer(response_text, reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
     await state.clear()
 
 
@@ -1177,7 +1187,7 @@ async def cancel_order(message: types.Message, state: FSMContext):
     await state.clear()
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
-    await message.answer("Оформление заказа отменено.", reply_markup=main_menu_kb(user_data))
+    await message.answer("Оформление заказа отменено.", reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
 
 
 # ─── Кнопки главного меню ──────────────────────────────────────────────────
@@ -1199,7 +1209,7 @@ async def btn_back(message: types.Message):
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
     user_data["_user_id"] = str(message.from_user.id)
-    await message.answer("📋 Главное меню:", reply_markup=main_menu_kb(user_data))
+    await message.answer("📋 Главное меню:", reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
 
 
 @dp.message(F.text == "👥 Пользователи")
