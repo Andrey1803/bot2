@@ -811,6 +811,52 @@ async def cmd_fill_addresses(message: types.Message):
     await message.answer(f"✅ Заполнены адреса у {updated} пользователей.")
 
 
+# ─── Админ: Синхронизировать даты подключения из YouGile ───────────────────
+@dp.message(Command("sync_dates"))
+async def cmd_sync_dates(message: types.Message):
+    """Обновляет даты подключения пользователей по дате создания первой задачи в YouGile."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    from tools.yougile_api import get_tasks_for_stats
+
+    users = await load_users()
+    updated = 0
+
+    try:
+        tasks = get_tasks_for_stats(days=365)
+    except Exception as e:
+        await message.answer(f"❌ Ошибка получения задач: {e}")
+        return
+
+    # Группируем задачи по users
+    user_first_task = {}
+    for task in tasks:
+        # Ищем ID пользователя в описании или имени
+        description = task.get("description", "")
+        task_id_match = re.search(r"id: <code>(\d+)</code>", description)
+        if task_id_match:
+            user_id = task_id_match.group(1)
+            created = task.get("created", "")
+            if user_id not in user_first_task or created < user_first_task[user_id]:
+                user_first_task[user_id] = created
+
+    # Обновляем даты
+    for user_id, created in user_first_task.items():
+        if user_id in users and isinstance(users[user_id], dict):
+            old_joined = users[user_id].get("joined", "")
+            # Обновляем только если старая дата = фейковая
+            if old_joined.startswith("2026-04-11T19:30"):
+                users[user_id]["joined"] = created
+                updated += 1
+                logger.info(f"📅 {user_id}: {old_joined} → {created}")
+
+    await save_users(users)
+    await message.answer(f"✅ Синхронизированы даты у {updated} пользователей.\n"
+                         f"Найдено задач: {len(tasks)}, пользователей с датами: {len(user_first_task)}")
+
+
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
 @dp.message(Command("export"))
 async def cmd_export(message: types.Message):
