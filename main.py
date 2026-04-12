@@ -426,6 +426,7 @@ async def cmd_restore(message: types.Message):
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
+    logger.info(f"👤 /start от user_id={user_id}, full_name={message.from_user.full_name}")
     users = await load_users()
 
     # Если пользователь уже был — не перезаписываем телефон
