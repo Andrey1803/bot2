@@ -190,7 +190,9 @@ def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
     buttons.append([KeyboardButton(text="👤 Мой профиль")])
 
     # Админ-кнопка — проверка по реальному ID
-    if str(user_id) == str(ADMIN_ID):
+    is_admin = (str(user_id) == str(ADMIN_ID))
+    logger.info(f"🔍 Проверка админа: user_id={user_id}, ADMIN_ID={ADMIN_ID}, is_admin={is_admin}")
+    if is_admin:
         buttons.append([KeyboardButton(text="🛡️ Админ-панель")])
 
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
