@@ -65,7 +65,7 @@ DEFAULT_USERS = {
     "460143593": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Александр", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296499005", "last_order_id": None, "last_address": "Д.Чуденичи, Широкая 10", "ratings": []},
     "432775666": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296450385", "last_order_id": None, "last_address": "Колодищи, ул.Беловежская,7а", "ratings": []},
     "515325398": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Василий", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296344480", "last_order_id": None, "last_address": "д. Дроздово, ул. Полевая, 19", "ratings": []},
-    "814067080": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Анна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375293101429", "last_order_id": None, "last_address": None, "ratings": []},
+    "814067080": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Анна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375293101429", "last_order_id": None, "last_address": "СТ Чистая Надзея 7", "ratings": []},
 }
 
 def _init_data_files():
