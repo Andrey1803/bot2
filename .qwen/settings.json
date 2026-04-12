@@ -16,7 +16,9 @@
       "Bash(dir *)",
       "Bash(curl *)",
       "Bash(powershell *)",
-      "WebFetch(github.com)"
+      "WebFetch(github.com)",
+      "Bash(git remote *)",
+      "Bash(git *)"
     ]
   },
   "$version": 3

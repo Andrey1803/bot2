@@ -60,7 +60,7 @@ def get_task_status(task_id: str) -> dict:
 
 def get_tasks_for_stats(days: int = 30) -> list:
     """
-    Получает все задачи за последние N дней для статистики.
+    Получает все задачи с доски для статистики.
     """
     url = f"{API_URL}/tasks"
     params = {"limit": 500}
@@ -68,6 +68,21 @@ def get_tasks_for_stats(days: int = 30) -> list:
     if response.status_code in (200, 201):
         data = response.json()
         return data if isinstance(data, list) else data.get("tasks", [])
+    else:
+        raise Exception(f"{response.status_code} {response.text}")
+
+
+def get_all_board_tasks(board_id: str) -> list:
+    """
+    Получает все задачи с конкретной доски.
+    """
+    url = f"{API_URL}/tasks"
+    params = {"boardId": board_id, "limit": 500}
+    response = requests.get(url, headers=_headers(), params=params)
+    if response.status_code in (200, 201):
+        data = response.json()
+        tasks = data if isinstance(data, list) else data.get("tasks", [])
+        return tasks
     else:
         raise Exception(f"{response.status_code} {response.text}")
 

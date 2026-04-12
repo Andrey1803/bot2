@@ -28,6 +28,7 @@ if _admin_id and _admin_id.strip():
         raise ValueError(f"ADMIN_ID must be a number, got: {_admin_id}")
 
 PROJECT_ID = os.getenv("PROJECT_ID")
+BOARD_ID = os.getenv("BOARD_ID", "")
 
 # Секрет для проверки вебхуков от YouGile
 YOUGILE_WEBHOOK_SECRET = os.getenv("YOUGILE_WEBHOOK_SECRET", "")

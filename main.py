@@ -819,21 +819,24 @@ async def cmd_sync_dates(message: types.Message):
         await message.answer("⛔ Только админ.")
         return
 
-    from tools.yougile_api import get_tasks_for_stats
+    from tools.yougile_api import get_all_board_tasks
+    from config import BOARD_ID
 
     users = await load_users()
     updated = 0
 
-    try:
-        tasks = get_tasks_for_stats(days=365)
-    except Exception as e:
-        await message.answer(f"❌ Ошибка получения задач: {e}")
+    if not BOARD_ID:
+        await message.answer("⚠️ BOARD_ID не задан в переменных Railway.")
         return
 
-    # Группируем задачи по users
+    try:
+        tasks = get_all_board_tasks(BOARD_ID)
+    except Exception as e:
+        await message.answer(f"❌ Ошибка: {e}")
+        return
+
     user_first_task = {}
     for task in tasks:
-        # Ищем ID пользователя в описании или имени
         description = task.get("description", "")
         task_id_match = re.search(r"id: <code>(\d+)</code>", description)
         if task_id_match:
@@ -842,11 +845,9 @@ async def cmd_sync_dates(message: types.Message):
             if user_id not in user_first_task or created < user_first_task[user_id]:
                 user_first_task[user_id] = created
 
-    # Обновляем даты
     for user_id, created in user_first_task.items():
         if user_id in users and isinstance(users[user_id], dict):
             old_joined = users[user_id].get("joined", "")
-            # Обновляем только если старая дата = фейковая
             if old_joined.startswith("2026-04-11T19:30"):
                 users[user_id]["joined"] = created
                 updated += 1
@@ -854,7 +855,7 @@ async def cmd_sync_dates(message: types.Message):
 
     await save_users(users)
     await message.answer(f"✅ Синхронизированы даты у {updated} пользователей.\n"
-                         f"Найдено задач: {len(tasks)}, пользователей с датами: {len(user_first_task)}")
+                         f"Найдено задач на доске: {len(tasks)}, пользователей с датами: {len(user_first_task)}")
 
 
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
