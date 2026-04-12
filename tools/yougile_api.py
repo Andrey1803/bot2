@@ -74,10 +74,10 @@ def get_tasks_for_stats(days: int = 30) -> list:
 
 def get_all_board_tasks(board_id: str) -> list:
     """
-    Получает все задачи с конкретной доски.
+    Получает все задачи с конкретной доски через эндпоинт /boards/{id}/tasks.
     """
-    url = f"{API_URL}/tasks"
-    params = {"boardId": board_id, "limit": 500}
+    url = f"{API_URL}/boards/{board_id}/tasks"
+    params = {"limit": 500}
     response = requests.get(url, headers=_headers(), params=params)
     if response.status_code in (200, 201):
         data = response.json()
