@@ -51,21 +51,21 @@ ORDER_LOG = "data/orders.log"
 # ─── Инициализация файлов данных ─────────────────────────────────────────────
 # ─── Резервная копия пользователей (для инициализации пустого Volume) ────────
 DEFAULT_USERS = {
-    "5567898807": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "вцьоащц", "reminder_sent": False, "phone": "+375291472109", "last_order_id": None, "ratings": []},
-    "5185948718": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ната", "reminder_sent": False, "phone": "+375447408978", "last_order_id": None, "ratings": []},
-    "7599242480": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Козырева Майя", "reminder_sent": False, "phone": "+375295034840", "last_order_id": None, "ratings": []},
-    "6445132705": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "phone": "+375293608308", "last_order_id": None, "ratings": []},
-    "449621760": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Гаврош", "reminder_sent": False, "phone": "+375447779866", "last_order_id": None, "ratings": []},
-    "586923354": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Виктор", "reminder_sent": False, "phone": "+375296160955", "last_order_id": None, "ratings": []},
-    "750303531": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Игорь", "reminder_sent": False, "phone": "+375296317433", "last_order_id": None, "ratings": []},
-    "508334961": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Сергей", "reminder_sent": False, "phone": "+375296772018", "last_order_id": None, "ratings": []},
-    "650648039": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ирина", "reminder_sent": False, "phone": "+375293697683", "last_order_id": None, "ratings": []},
-    "1243322312": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Вячеслав Глеб", "reminder_sent": False, "phone": "+375296562038", "last_order_id": None, "ratings": []},
-    "486713249": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Павел", "reminder_sent": False, "phone": "+375296465638", "last_order_id": None, "ratings": []},
-    "460143593": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Александр", "reminder_sent": False, "phone": "+375296499005", "last_order_id": None, "ratings": []},
-    "432775666": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "phone": "+375296450385", "last_order_id": None, "ratings": []},
-    "515325398": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Василий", "reminder_sent": False, "phone": "+375296344480", "last_order_id": None, "ratings": []},
-    "814067080": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Анна", "reminder_sent": False, "phone": "+375293101429", "last_order_id": None, "ratings": []},
+    "5567898807": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "вцьоащц", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375291472109", "last_order_id": None, "last_address": None, "ratings": []},
+    "5185948718": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ната", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375447408978", "last_order_id": None, "last_address": None, "ratings": []},
+    "7599242480": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Козырева Майя", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375295034840", "last_order_id": None, "last_address": "Колодищи 2, ул. Рябиновая, д. 10", "ratings": []},
+    "6445132705": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375293608308", "last_order_id": None, "last_address": "Минская область, Дзержинский район, д. Каменка, ул. Центральная д. 7", "ratings": []},
+    "449621760": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Гаврош", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375447779866", "last_order_id": None, "last_address": "Логойский р-н, Беларучский с/с, СТ Текстиль, уч. 23", "ratings": []},
+    "586923354": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Виктор", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296160955", "last_order_id": None, "last_address": "Логойский район ст малиновка 2001, солнечная 192", "ratings": []},
+    "750303531": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Игорь", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296317433", "last_order_id": None, "last_address": "СТ НИВА Ф 188", "ratings": []},
+    "508334961": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Сергей", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296772018", "last_order_id": None, "last_address": "Заславль ул Строительная2", "ratings": []},
+    "650648039": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Ирина", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375293697683", "last_order_id": None, "last_address": "Раубичи земляничная 3", "ratings": []},
+    "1243322312": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Вячеслав Глеб", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296562038", "last_order_id": None, "last_address": "Марьяливо, улица Центральная 43А", "ratings": []},
+    "486713249": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Павел", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296465638", "last_order_id": None, "last_address": "Аг.Острошицы, ул. Парижской Коммуны,5А", "ratings": []},
+    "460143593": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Александр", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296499005", "last_order_id": None, "last_address": "Д.Чуденичи, Широкая 10", "ratings": []},
+    "432775666": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Татьяна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296450385", "last_order_id": None, "last_address": "Колодищи, ул.Беловежская,7а", "ratings": []},
+    "515325398": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Василий", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375296344480", "last_order_id": None, "last_address": "д. Дроздово, ул. Полевая, 19", "ratings": []},
+    "814067080": {"joined": "2026-04-11T19:30:00", "username": None, "full_name": "Анна", "reminder_sent": False, "last_reminder_sent": None, "phone": "+375293101429", "last_order_id": None, "last_address": None, "ratings": []},
 }
 
 def _init_data_files():
