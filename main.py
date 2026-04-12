@@ -365,6 +365,7 @@ async def migrate_old_format():
                 ("last_reminder_sent", None),
                 ("phone", None),
                 ("last_order_id", None),
+                ("last_address", None),
                 ("ratings", []),
             ]:
                 if key not in data:
@@ -427,6 +428,8 @@ async def cmd_restore(message: types.Message):
 async def cmd_start(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
     logger.info(f"👤 /start от user_id={user_id}, full_name={message.from_user.full_name}")
+    # Очищаем FSM — чтобы админ не оставался в состоянии заказа
+    await state.clear()
     users = await load_users()
 
     # Если пользователь уже был — не перезаписываем телефон
@@ -1170,6 +1173,9 @@ async def finalize_order(message: types.Message, state: FSMContext):
         # Сохраняем имя в профиле
         await update_user_field(user_id, "full_name", name)
 
+        # Сохраняем адрес в профиле
+        await update_user_field(user_id, "last_address", address)
+
         response_text = (
             f"✅ Спасибо! Ваш заказ принят и добавлен в YouGile.\n"
             f"📋 ID задачи: <code>{task_id}</code>\n"
@@ -1338,6 +1344,7 @@ async def list_users(message: types.Message):
                 username = data.get("username")
                 full_name = data.get("full_name")
                 phone = data.get("phone", "—")
+                address = data.get("last_address", "—")
                 joined = data.get("joined", "—")
                 ratings = data.get("ratings", [])
                 avg_rating = f"{sum(ratings)/len(ratings):.1f}⭐" if ratings else "—"
@@ -1351,12 +1358,14 @@ async def list_users(message: types.Message):
             else:
                 name_display = "❓"
                 phone = "—"
+                address = "—"
                 joined = str(data)
                 avg_rating = "—"
 
             text += f"• <b>{name_display}</b>\n"
-            text += f"  ID: <code>{uid}</code> | 📱 {phone} | ⭐ {avg_rating}\n"
-            text += f"  Дата: {joined}\n\n"
+            text += f"  ID: <code>{uid}</code> | 📱 {phone}\n"
+            text += f"  📍 Адрес: {address}\n"
+            text += f"  ⭐ {avg_rating} | 📅 {joined}\n\n"
 
         await message.answer(text)
 
