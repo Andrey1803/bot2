@@ -790,6 +790,27 @@ async def cmd_reset_reminders(message: types.Message):
     await message.answer(f"✅ Сброшены напоминания у {count} пользователей.")
 
 
+# ─── Админ: Заполнить адреса ────────────────────────────────────────────────
+@dp.message(Command("fill_addresses"))
+async def cmd_fill_addresses(message: types.Message):
+    """Заполняет адреса пользователей из DEFAULT_USERS."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    users = await load_users()
+    updated = 0
+    for uid, default_data in DEFAULT_USERS.items():
+        if uid in users and isinstance(users[uid], dict):
+            addr = default_data.get("last_address")
+            if addr and not users[uid].get("last_address"):
+                users[uid]["last_address"] = addr
+                updated += 1
+
+    await save_users(users)
+    await message.answer(f"✅ Заполнены адреса у {updated} пользователей.")
+
+
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
 @dp.message(Command("export"))
 async def cmd_export(message: types.Message):
