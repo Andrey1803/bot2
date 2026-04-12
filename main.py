@@ -362,6 +362,24 @@ async def check_work_hours(message: types.Message) -> bool:
 # ─── Обработчики команд ─────────────────────────────────────────────────────
 # ═════════════════════════════════════════════════════════════════════════════
 
+@dp.message(Command("restore"))
+async def cmd_restore(message: types.Message):
+    """Ручное восстановление базы пользователей."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    global _users_cache
+    _users_cache = DEFAULT_USERS.copy()
+
+    try:
+        with open(USER_FILE, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
+        await message.answer(f"✅ База восстановлена! {len(DEFAULT_USERS)} пользователей.")
+    except Exception as e:
+        await message.answer(f"❌ Ошибка: {e}")
+
+
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
