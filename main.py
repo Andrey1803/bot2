@@ -147,6 +147,9 @@ SERVICE_CATEGORIES = {
     "📋 Консультация": "Консультация специалиста",
 }
 
+# ─── Периодичность ТО (в месяцах) ──────────────────────────────────────────
+MAINTENANCE_INTERVAL_MONTHS = 6
+
 
 def category_kb():
     """Клавиатура с категориями услуг."""
@@ -155,7 +158,13 @@ def category_kb():
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
-# ─── Клавиатуры ──────────────────────────────────────────────────────────────
+def skip_inline_kb():
+    """Inline-кнопка 'Пропустить'."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip_field")]
+    ])
+
+
 def main_menu_kb(user_data: dict = None):
     """Главное меню. Если есть телефон — показываем кнопку повтора заказа."""
     buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
@@ -404,10 +413,16 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await save_users(users)
 
     user_data = users[user_id]
+    next_maint = calc_next_maintenance(user_data.get("joined"))
+    maint_info = ""
+    if next_maint:
+        maint_info = f"\n📅 Следующее ТО: {next_maint.strftime('%d.%m.%Y')}"
+
     await message.answer(
         f"Привет, {message.from_user.full_name}! 👋\n"
         "Я приму ваш заказ и передам менеджеру.\n"
-        "Нажмите кнопку ниже, чтобы оформить заявку.",
+        "Нажмите кнопку ниже, чтобы оформить заявку."
+        f"{maint_info}",
         reply_markup=main_menu_kb(user_data)
     )
 
@@ -417,10 +432,21 @@ async def cmd_help(message: types.Message):
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
 
+    # Информация о следующем ТО
+    next_maint = calc_next_maintenance(user_data.get("joined"))
+    maint_info = ""
+    if next_maint:
+        days = (next_maint - datetime.now()).days
+        if days <= 0:
+            maint_info = f"\n\n🔧 <b>ТО просрочено!</b> Рекомендуется записаться на обслуживание."
+        else:
+            maint_info = f"\n\n📅 <b>Следующее ТО:</b> {next_maint.strftime('%d.%m.%Y')} (через {days} дн.)"
+
     await message.answer(
         "📋 <b>Доступные команды:</b>\n\n"
         "/start — Начать работу с ботом\n"
         "/help — Показать это сообщение\n"
+        "/profile — Мой профиль и дата ТО\n"
         "/status — Статус последнего заказа\n"
         "/rate — Оценить качество обслуживания\n\n"
         "🧾 <b>Кнопки:</b>\n"
@@ -428,9 +454,49 @@ async def cmd_help(message: types.Message):
         "• Повторить заказ — быстро заказать то же самое\n"
         "• Мои заказы — история заказов\n\n"
         "🕐 Часы работы: 08:00 — 20:00\n"
-        "Если у вас есть вопросы, свяжитесь с менеджером.",
+        f"{maint_info}",
         reply_markup=main_menu_kb(user_data)
     )
+
+
+@dp.message(Command("profile"))
+async def cmd_profile(message: types.Message):
+    """Показывает профиль пользователя с датой следующего ТО."""
+    users = await load_users()
+    user_id = str(message.from_user.id)
+    user_data = users.get(user_id, {})
+
+    if not user_data:
+        await message.answer("⚠️ Вы ещё не зарегистрированы. Нажмите /start")
+        return
+
+    name = user_data.get("full_name", "—")
+    phone = user_data.get("phone", "—")
+    joined = user_data.get("joined", "—")[:10]
+    ratings = user_data.get("ratings", [])
+    avg_rating = round(sum(ratings) / len(ratings), 1) if ratings else "нет оценок"
+
+    next_maint = calc_next_maintenance(user_data.get("joined"))
+    if next_maint:
+        days = (next_maint - datetime.now()).days
+        if days <= 0:
+            maint_status = f"🔴 Просрочено на {abs(days)} дн."
+        else:
+            maint_status = f"🟢 Через {days} дн. ({next_maint.strftime('%d.%m.%Y')})"
+    else:
+        maint_status = "⚪ Не определено"
+
+    text = (
+        f"👤 <b>Мой профиль</b>\n\n"
+        f"Имя: {name}\n"
+        f"Телефон: {phone}\n"
+        f"Дата регистрации: {joined}\n"
+        f"Средняя оценка: {avg_rating}\n\n"
+        f"🔧 <b>ТО скважины</b> (каждые {MAINTENANCE_INTERVAL_MONTHS} мес.):\n"
+        f"Статус: {maint_status}"
+    )
+
+    await message.answer(text, reply_markup=main_menu_kb(user_data))
 
 
 # ─── Фича 2: Статус заказа ──────────────────────────────────────────────────
@@ -614,6 +680,106 @@ async def process_broadcast(message: types.Message, state: FSMContext):
         f"👥 Всего: {total}"
     )
     await state.clear()
+
+
+# ─── Админ: Отчёт о ТО ──────────────────────────────────────────────────────
+@dp.message(Command("maintenance"))
+async def cmd_maintenance(message: types.Message):
+    """Показывает админу статус ТО всех пользователей."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    users = await load_users()
+    now = datetime.now()
+    overdue = []
+    soon = []
+    ok = []
+
+    for user_id, user_data in sorted(users.items(), key=lambda x: x[1].get("joined", "")):
+        if not isinstance(user_data, dict):
+            continue
+        name = user_data.get("full_name", "—")
+        phone = user_data.get("phone", "—")
+        joined_str = user_data.get("joined")
+        next_maint = calc_next_maintenance(joined_str)
+
+        if not next_maint:
+            continue
+
+        days_until = (next_maint - now).days
+        reminder_sent = user_data.get("reminder_sent", False)
+
+        if days_until <= 0:
+            overdue.append(f"  🔴 {name} | {phone} | ТО просрочено ({abs(days_until)} дн.) | Напоминание: {'✅' if reminder_sent else '❌'}")
+        elif days_until <= 30:
+            soon.append(f"  🟡 {name} | {phone} | через {days_until} дн. ({next_maint.strftime('%d.%m.%Y')}) | Напоминание: {'✅' if reminder_sent else '❌'}")
+        else:
+            ok.append(f"  🟢 {name} | через {days_until} дн. ({next_maint.strftime('%d.%m.%Y')})")
+
+    text = f"🔧 <b>Статус ТО</b> (интервал: {MAINTENANCE_INTERVAL_MONTHS} мес.):\n\n"
+
+    if overdue:
+        text += f"<b>⚠️ Просрочено ({len(overdue)})</b>:\n" + "\n".join(overdue) + "\n\n"
+    if soon:
+        text += f"<b>📅 Скоро ({len(soon)})</b>:\n" + "\n".join(soon[:10]) + "\n\n"
+    if ok:
+        text += f"<b>✅ В норме ({len(ok)})</b>:\n" + "\n".join(ok[:10])
+
+    if len(ok) > 10:
+        text += f"\n  ... и ещё {len(ok) - 10}"
+
+    await message.answer(text)
+
+
+# ─── Админ: Сброс напоминаний ───────────────────────────────────────────────
+@dp.message(Command("reset_reminders"))
+async def cmd_reset_reminders(message: types.Message):
+    """Сбрасывает флаги reminder_sent у всех пользователей."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    users = await load_users()
+    count = 0
+    for user_id, user_data in users.items():
+        if isinstance(user_data, dict) and user_data.get("reminder_sent"):
+            users[user_id]["reminder_sent"] = False
+            count += 1
+
+    await save_users(users)
+    await message.answer(f"✅ Сброшены напоминания у {count} пользователей.")
+
+
+# ─── Админ: Экспорт пользователей ───────────────────────────────────────────
+@dp.message(Command("export"))
+async def cmd_export(message: types.Message):
+    """Экспорт всех пользователей в CSV-файл."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    users = await load_users()
+    csv_lines = ["ID,Имя,Телефон,Дата регистрации,Напоминание,Ср. рейтинг"]
+
+    for user_id, user_data in users.items():
+        if not isinstance(user_data, dict):
+            continue
+        name = user_data.get("full_name", "").replace(",", ";")
+        phone = user_data.get("phone", "—")
+        joined = user_data.get("joined", "—")[:10]
+        reminder = "✅" if user_data.get("reminder_sent") else "❌"
+        ratings = user_data.get("ratings", [])
+        avg_rating = round(sum(ratings) / len(ratings), 1) if ratings else "—"
+        csv_lines.append(f"{user_id},{name},{phone},{joined},{reminder},{avg_rating}")
+
+    csv_content = "\n".join(csv_lines)
+    file_path = "data/users_export.csv"
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(csv_content)
+
+    await message.answer_document(FSInputFile(file_path), caption=f"📊 Экспорт {len(users)} пользователей")
 
 
 # ─── Фича 7: Оценка качества ───────────────────────────────────────────────
@@ -864,8 +1030,8 @@ async def process_address(message: types.Message, state: FSMContext):
     await state.set_state(OrderForm.comment)
     await message.answer(
         "Напишите комментарий к заказу:\n"
-        "<i>(или отправьте «Пропустить»)</i>",
-        reply_markup=cancel_kb()
+        "<i>(или нажмите «⏭️ Пропустить»)</i>",
+        reply_markup=skip_inline_kb()
     )
 
 
@@ -879,9 +1045,27 @@ async def process_comment(message: types.Message, state: FSMContext):
     await state.set_state(OrderForm.photo)
     await message.answer(
         "📸 Прикрепите фото объекта (необязательно):\n"
-        "<i>Или отправьте «Пропустить»</i>",
-        reply_markup=cancel_kb()
+        "<i>Или нажмите «⏭️ Пропустить»</i>",
+        reply_markup=skip_inline_kb()
     )
+
+
+@dp.callback_query(F.data == "skip_field", StateFilter(OrderForm))
+async def callback_skip_field(callback: types.CallbackQuery, state: FSMContext):
+    """Обработка нажатия inline-кнопки 'Пропустить'."""
+    current_state = await state.get_state()
+    
+    if current_state == "OrderForm:comment":
+        await state.update_data(comment="—")
+        await state.set_state(OrderForm.photo)
+        await callback.message.edit_text("📸 Прикрепите фото объекта (необязательно):")
+        await callback.message.answer("⏭️ Комментарий пропущен. Отправьте фото или нажмите «Пропустить».", reply_markup=skip_inline_kb())
+    elif current_state == "OrderForm:photo":
+        await state.update_data(photo_file_id=None)
+        await callback.message.edit_text("📸 Фото пропущено")
+        await finalize_order(callback.message, state)
+    
+    await callback.answer()
 
 
 # ─── Фича 4: Фото к заказу ──────────────────────────────────────────────────
@@ -1077,13 +1261,47 @@ async def list_users(message: types.Message):
 # ─── Цикл напоминаний ───────────────────────────────────────────────────────
 # ═════════════════════════════════════════════════════════════════════════════
 
+def calc_next_maintenance(joined_str: str) -> datetime | None:
+    """Вычисляет следующую дату ТО."""
+    if not joined_str:
+        return None
+    try:
+        joined_at = datetime.fromisoformat(joined_str)
+        return joined_at + timedelta(days=MAINTENANCE_INTERVAL_MONTHS * 30)
+    except (ValueError, TypeError):
+        return None
+
+
+async def send_maintenance_reminder(user_id: str, users: dict, next_maint: datetime):
+    """Отправляет напоминание пользователю."""
+    days_left = (next_maint - datetime.now()).days
+    if days_left <= 0:
+        text = (
+            "🔧 <b>Напоминание о ТО</b>\n\n"
+            "Прошло 6 месяцев с момента последнего обслуживания. "
+            "Рекомендуем провести техническое обслуживание скважины, "
+            "чтобы всё работало как часы.\n\n"
+            "Нажмите 🧾 Сделать заказ, чтобы записаться."
+        )
+    else:
+        text = (
+            "📅 <b>Плановое ТО</b>\n\n"
+            f"Через {days_left} дн. рекомендуется провести ТО скважины.\n"
+            f"📆 Примерная дата: {next_maint.strftime('%d.%m.%Y')}\n\n"
+            "Нажмите 🧾 Сделать заказ, чтобы записаться заранее."
+        )
+    await bot.send_message(int(user_id), text)
+    users[user_id]["reminder_sent"] = True
+
+
 async def reminder_loop():
-    """Напоминания каждые 10 секунд. Флаг reminder_sent предотвращает дубли."""
+    """Проверка напоминаний о ТО каждый час."""
     while True:
         try:
             now = datetime.now()
             users = await load_users()
             changed = False
+            admin_report_lines = []
 
             for user_id, user_data in list(users.items()):
                 if not isinstance(user_data, dict):
@@ -1093,26 +1311,39 @@ async def reminder_loop():
                 if not joined_str:
                     continue
 
-                try:
-                    joined_at = datetime.fromisoformat(joined_str)
-                except (ValueError, TypeError):
-                    logger.warning(f"Некорректная дата joined у {user_id}: {joined_str}")
+                next_maint = calc_next_maintenance(joined_str)
+                if not next_maint:
                     continue
 
-                if now - joined_at >= timedelta(days=180) and not user_data.get("reminder_sent"):
+                days_until = (next_maint - now).days
+
+                # Если пора отправить напоминание (0 дней или прошло)
+                if days_until <= 0 and not user_data.get("reminder_sent"):
                     try:
-                        await bot.send_message(
-                            int(user_id),
-                            "🔧 🔔 Уже 6 месяцев с момента последнего обслуживания. "
-                            "Чтобы всё работало как часы, рекомендуем записаться на проверку."
-                        )
-                        users[user_id]["reminder_sent"] = True
+                        await send_maintenance_reminder(user_id, users, next_maint)
                         changed = True
-                        logger.info(f"✅ Напоминание → {user_id}")
+                        logger.info(f"✅ Напоминание о ТО → {user_id}")
+                        admin_report_lines.append(
+                            f"  • {user_data.get('full_name', '—')} ({user_id}) — ТО просрочено"
+                        )
                     except Exception as e:
                         logger.warning(f"Не удалось отправить напоминание {user_id}: {e}")
                         users[user_id]["reminder_sent"] = True
                         changed = True
+
+                # Если напоминание ещё не отправлено и осталось ≤ 7 дней
+                elif 0 < days_until <= 7 and not user_data.get("reminder_sent"):
+                    admin_report_lines.append(
+                        f"  • {user_data.get('full_name', '—')} ({user_id}) — ТО через {days_until} дн. ({next_maint.strftime('%d.%m.%Y')})"
+                    )
+
+            # Отчёт админу о предстоящих ТО
+            if admin_report_lines and str(ADMIN_ID) not in [str(uid) for uid in users.keys()]:
+                report = "📋 <b>Плановые ТО</b>:\n" + "\n".join(admin_report_lines[:20])
+                try:
+                    await bot.send_message(int(ADMIN_ID), report)
+                except Exception:
+                    pass
 
             if changed:
                 await save_users(users)
@@ -1120,7 +1351,7 @@ async def reminder_loop():
         except Exception as e:
             logger.error(f"❌ Ошибка в цикле напоминаний: {e}")
 
-        await asyncio.sleep(10)
+        await asyncio.sleep(3600)  # Проверка каждый час
 
 
 # ═════════════════════════════════════════════════════════════════════════════
