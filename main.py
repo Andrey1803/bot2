@@ -351,6 +351,7 @@ async def migrate_old_format():
                 "username": None,
                 "full_name": None,
                 "reminder_sent": False,
+                "last_reminder_sent": None,
                 "phone": None,
                 "last_order_id": None,
                 "ratings": [],
@@ -359,6 +360,7 @@ async def migrate_old_format():
         elif isinstance(data, dict):
             for key, default in [
                 ("reminder_sent", False),
+                ("last_reminder_sent", None),
                 ("phone", None),
                 ("last_order_id", None),
                 ("ratings", []),
@@ -436,6 +438,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
             "username": message.from_user.username,
             "full_name": message.from_user.full_name,
             "reminder_sent": False,
+            "last_reminder_sent": None,
             "phone": None,
             "last_order_id": None,
             "ratings": [],
@@ -1359,8 +1362,14 @@ async def list_users(message: types.Message):
 # ─── Цикл напоминаний ───────────────────────────────────────────────────────
 # ═════════════════════════════════════════════════════════════════════════════
 
-def calc_next_maintenance(joined_str: str) -> datetime | None:
+def calc_next_maintenance(joined_str: str, last_maintenance_str: str = None) -> datetime | None:
     """Вычисляет следующую дату ТО."""
+    if last_maintenance_str:
+        try:
+            last_maint = datetime.fromisoformat(last_maintenance_str)
+            return last_maint + timedelta(days=MAINTENANCE_INTERVAL_MONTHS * 30)
+        except (ValueError, TypeError):
+            pass
     if not joined_str:
         return None
     try:
@@ -1370,7 +1379,7 @@ def calc_next_maintenance(joined_str: str) -> datetime | None:
         return None
 
 
-async def send_maintenance_reminder(user_id: str, users: dict, next_maint: datetime):
+async def send_maintenance_reminder(user_id: str, user_data: dict, next_maint: datetime):
     """Отправляет напоминание пользователю."""
     days_left = (next_maint - datetime.now()).days
     if days_left <= 0:
@@ -1384,64 +1393,125 @@ async def send_maintenance_reminder(user_id: str, users: dict, next_maint: datet
     else:
         text = (
             "📅 <b>Плановое ТО</b>\n\n"
-            f"Через {days_left} дн. рекомендуется провести ТО скважины.\n"
-            f"📆 Примерная дата: {next_maint.strftime('%d.%m.%Y')}\n\n"
+            f"Через {days_left} дн. ({next_maint.strftime('%d.%m.%Y')}) рекомендуется провести ТО скважины.\n\n"
             "Нажмите 🧾 Сделать заказ, чтобы записаться заранее."
         )
-    await bot.send_message(int(user_id), text)
-    users[user_id]["reminder_sent"] = True
+    try:
+        await bot.send_message(int(user_id), text)
+        return True
+    except Exception as e:
+        logger.warning(f"Не удалось отправить напоминание {user_id}: {e}")
+        return False
+
+
+async def notify_admin_maintenance(admin_id: int, user_id: str, user_data: dict, next_maint: datetime, status: str):
+    """Уведомляет админа о статусе ТО пользователя."""
+    name = user_data.get("full_name", "—")
+    phone = user_data.get("phone", "—")
+    days_left = (next_maint - datetime.now()).days
+
+    text = (
+        f"🔧 <b>ТО пользователя</b>\n\n"
+        f"👤 {name} ({user_id})\n"
+        f"📱 {phone}\n"
+        f"📆 Дата ТО: {next_maint.strftime('%d.%m.%Y')}\n"
+        f"📌 Статус: {status}\n"
+        f"⏰ Осталось: {days_left} дн."
+    )
+    try:
+        await bot.send_message(admin_id, text)
+        return True
+    except Exception as e:
+        logger.warning(f"Не удалось уведомить админа о ТО {user_id}: {e}")
+        return False
 
 
 async def reminder_loop():
-    """Проверка напоминаний о ТО каждый час."""
+    """Проверка напоминаний о ТО каждый час.
+    
+    Логика:
+    - За 7 дней до ТО → напоминание пользователю + уведомление админу
+    - В день ТО (0 дней) → напоминание пользователю + уведомление админу
+    - После ТО (просрочено) → напоминание пользователю + уведомление админу
+    - После напоминания → сброс через 30 дней (следующий цикл)
+    """
     while True:
         try:
             now = datetime.now()
             users = await load_users()
             changed = False
-            admin_report_lines = []
+            admin_notifications = []
 
             for user_id, user_data in list(users.items()):
                 if not isinstance(user_data, dict):
+                    continue
+
+                # Пропускаем самого админа
+                if str(user_id) == str(ADMIN_ID):
                     continue
 
                 joined_str = user_data.get("joined")
                 if not joined_str:
                     continue
 
-                next_maint = calc_next_maintenance(joined_str)
+                # Дата последнего напоминания или None
+                last_reminder = user_data.get("last_reminder_sent")
+                next_maint = calc_next_maintenance(joined_str, last_reminder)
                 if not next_maint:
                     continue
 
                 days_until = (next_maint - now).days
+                last_reminder_date = user_data.get("last_reminder_sent")
 
-                # Если пора отправить напоминание (0 дней или прошло)
-                if days_until <= 0 and not user_data.get("reminder_sent"):
+                # Проверяем, не отправляли ли напоминание в последние 30 дней
+                should_remind = False
+                status_text = ""
+
+                if last_reminder_date:
                     try:
-                        await send_maintenance_reminder(user_id, users, next_maint)
+                        last_dt = datetime.fromisoformat(last_reminder_date)
+                        days_since_reminder = (now - last_dt).days
+                        if days_since_reminder < 30:
+                            continue  # Не беспокоим слишком часто
+                    except (ValueError, TypeError):
+                        pass
+
+                if days_until <= -30:
+                    # Просрочено более чем на 30 дней — повторяем напоминание
+                    should_remind = True
+                    status_text = "🔴 ТО просрочено"
+                elif days_until <= 0:
+                    # День ТО или просрочено
+                    should_remind = True
+                    status_text = f"🔴 ТО сегодня/просрочено ({abs(days_until)} дн.)"
+                elif days_until <= 7:
+                    # За неделю до ТО
+                    should_remind = True
+                    status_text = f"🟡 ТО через {days_until} дн."
+
+                if should_remind:
+                    # Отправляем пользователю
+                    user_sent = await send_maintenance_reminder(user_id, user_data, next_maint)
+                    
+                    # Формируем уведомление админу
+                    if user_sent:
+                        users[user_id]["last_reminder_sent"] = now.isoformat()
                         changed = True
-                        logger.info(f"✅ Напоминание о ТО → {user_id}")
-                        admin_report_lines.append(
-                            f"  • {user_data.get('full_name', '—')} ({user_id}) — ТО просрочено"
+                        admin_notifications.append(
+                            (user_id, user_data, next_maint, status_text)
                         )
-                    except Exception as e:
-                        logger.warning(f"Не удалось отправить напоминание {user_id}: {e}")
-                        users[user_id]["reminder_sent"] = True
-                        changed = True
+                        logger.info(f"✅ Напоминание о ТО → {user_id} ({status_text})")
 
-                # Если напоминание ещё не отправлено и осталось ≤ 7 дней
-                elif 0 < days_until <= 7 and not user_data.get("reminder_sent"):
-                    admin_report_lines.append(
-                        f"  • {user_data.get('full_name', '—')} ({user_id}) — ТО через {days_until} дн. ({next_maint.strftime('%d.%m.%Y')})"
-                    )
-
-            # Отчёт админу о предстоящих ТО
-            if admin_report_lines and str(ADMIN_ID) not in [str(uid) for uid in users.keys()]:
-                report = "📋 <b>Плановые ТО</b>:\n" + "\n".join(admin_report_lines[:20])
-                try:
-                    await bot.send_message(int(ADMIN_ID), report)
-                except Exception:
-                    pass
+            # Уведомляем админа списком
+            if admin_notifications:
+                report = f"🔧 <b>Напоминания о ТО</b> ({len(admin_notifications)}):\n\n"
+                for uid, udata, maint, status in admin_notifications:
+                    name = udata.get("full_name", "—")
+                    phone = udata.get("phone", "—")
+                    report += f"• {name} | {phone} | {status} | {maint.strftime('%d.%m.%Y')}\n"
+                
+                await bot.send_message(int(ADMIN_ID), report)
+                logger.info(f"📋 Отчёт админу о ТО: {len(admin_notifications)} уведомлений")
 
             if changed:
                 await save_users(users)
