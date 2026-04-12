@@ -820,17 +820,13 @@ async def cmd_sync_dates(message: types.Message):
         return
 
     from tools.yougile_api import get_all_board_tasks
-    from config import BOARD_ID
 
     users = await load_users()
     updated = 0
 
-    if not BOARD_ID:
-        await message.answer("⚠️ BOARD_ID не задан в переменных Railway.")
-        return
-
     try:
-        tasks = get_all_board_tasks(BOARD_ID)
+        await message.answer("⏳ Загружаю задачи из YouGile...")
+        tasks = get_all_board_tasks("")
     except Exception as e:
         await message.answer(f"❌ Ошибка: {e}")
         return
