@@ -811,47 +811,44 @@ async def cmd_fill_addresses(message: types.Message):
     await message.answer(f"✅ Заполнены адреса у {updated} пользователей.")
 
 
+# ─── Реальные даты подключения из YouGile ──────────────────────────────────
+YOUGILE_TASK_DATES = {
+    "7599242480": "2025-10-10T20:51:00",    # Козырева Майя
+    "6445132705": "2025-10-16T23:56:00",    # Татьяна
+    "750303531": "2025-11-19T14:16:00",     # Игорь
+    "508334961": "2025-11-28T10:42:00",     # Сергей
+    "650648039": "2025-11-29T21:22:00",     # Ирина
+    "1243322312": "2025-12-09T15:40:00",    # Вячеслав Глеб
+    "460143593": "2025-12-20T18:04:00",     # Александр
+    "432775666": "2026-01-15T13:46:00",     # Татьяна (2)
+    "814067080": "2026-01-11T16:27:00",     # Анна
+}
+
+
 # ─── Админ: Синхронизировать даты подключения из YouGile ───────────────────
 @dp.message(Command("sync_dates"))
 async def cmd_sync_dates(message: types.Message):
-    """Обновляет даты подключения пользователей по дате создания первой задачи в YouGile."""
+    """Обновляет даты подключения пользователей по данным из YouGile."""
     if str(message.from_user.id) != str(ADMIN_ID):
         await message.answer("⛔ Только админ.")
         return
 
-    from tools.yougile_api import get_all_board_tasks
-
     users = await load_users()
     updated = 0
+    lines = []
 
-    try:
-        await message.answer("⏳ Загружаю задачи из YouGile...")
-        tasks = get_all_board_tasks("")
-    except Exception as e:
-        await message.answer(f"❌ Ошибка: {e}")
-        return
-
-    user_first_task = {}
-    for task in tasks:
-        description = task.get("description", "")
-        task_id_match = re.search(r"id: <code>(\d+)</code>", description)
-        if task_id_match:
-            user_id = task_id_match.group(1)
-            created = task.get("created", "")
-            if user_id not in user_first_task or created < user_first_task[user_id]:
-                user_first_task[user_id] = created
-
-    for user_id, created in user_first_task.items():
+    for user_id, real_date in YOUGILE_TASK_DATES.items():
         if user_id in users and isinstance(users[user_id], dict):
             old_joined = users[user_id].get("joined", "")
-            if old_joined.startswith("2026-04-11T19:30"):
-                users[user_id]["joined"] = created
-                updated += 1
-                logger.info(f"📅 {user_id}: {old_joined} → {created}")
+            users[user_id]["joined"] = real_date
+            updated += 1
+            name = users[user_id].get("full_name", "—")
+            lines.append(f"• {name}: {old_joined[:10]} → {real_date[:10]}")
 
     await save_users(users)
-    await message.answer(f"✅ Синхронизированы даты у {updated} пользователей.\n"
-                         f"Найдено задач на доске: {len(tasks)}, пользователей с датами: {len(user_first_task)}")
+
+    text = f"✅ Синхронизированы даты у {updated} пользователей:\n" + "\n".join(lines)
+    await message.answer(text)
 
 
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
