@@ -1457,6 +1457,41 @@ async def btn_settings(message: types.Message):
     await message.answer(text, reply_markup=settings_kb())
 
 
+# ─── Отслеживание блокировки бота ──────────────────────────────────────────
+@dp.my_chat_member()
+async def track_chat_member(event: types.ChatMemberUpdated, bot: Bot):
+    """Отслеживает, когда пользователь блокирует/разблокирует бота."""
+    user_id = str(event.from_user.id)
+    old_status = event.old_chat_member.status
+    new_status = event.new_chat_member.status
+
+    if old_status != "member" and new_status == "member":
+        # Пользователь разблокировал бота
+        logger.info(f"🔓 Пользователь {user_id} разблокировал бота")
+    elif old_status == "member" and new_status in ("kicked", "left", "restricted"):
+        # Пользователь заблокировал бота или удалил чат
+        logger.warning(f"🚫 Пользователь {user_id} заблокировал бота ({new_status})")
+        
+        users = await load_users()
+        if user_id in users and isinstance(users[user_id], dict):
+            name = users[user_id].get("full_name", "—")
+            phone = users[user_id].get("phone", "—")
+            users[user_id]["blocked"] = True
+            await save_users(users)
+            
+            # Уведомляем админа
+            if ADMIN_ID:
+                try:
+                    await bot.send_message(
+                        ADMIN_ID,
+                        f"🚫 <b>Пользователь заблокировал бота</b>\n\n"
+                        f"👤 {name} ({user_id})\n"
+                        f"📱 {phone}"
+                    )
+                except Exception:
+                    pass
+
+
 @dp.callback_query(F.data == "settings_edit_name")
 async def cb_settings_name(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
