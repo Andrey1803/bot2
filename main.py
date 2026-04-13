@@ -47,6 +47,7 @@ WORK_END_HOUR = 20   # 20:00
 os.makedirs("data", exist_ok=True)
 USER_FILE = "data/users.json"
 ORDER_LOG = "data/orders.log"
+COMPLETED_FILE = "data/completed_orders.json"
 
 # ─── Инициализация файлов данных ─────────────────────────────────────────────
 # ─── Резервная копия пользователей (для инициализации пустого Volume) ────────
@@ -232,11 +233,53 @@ def admin_panel_kb():
     buttons = [
         [KeyboardButton(text="👥 Пользователи"), KeyboardButton(text="📊 Статистика")],
         [KeyboardButton(text="🔧 ТО статус"), KeyboardButton(text="✅ Отметить ТО")],
-        [KeyboardButton(text="📢 Рассылка")],
+        [KeyboardButton(text="📦 Заказы"), KeyboardButton(text="📢 Рассылка")],
         [KeyboardButton(text="📥 Экспорт CSV")],
         [KeyboardButton(text="🔙 Назад")],
     ]
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+
+async def load_completed_orders() -> set:
+    """Загружает ID выполненных заказов."""
+    try:
+        if os.path.exists(COMPLETED_FILE):
+            async with aiofiles.open(COMPLETED_FILE, "r", encoding="utf-8") as f:
+                data = json.loads(await f.read())
+                return set(data)
+    except Exception:
+        pass
+    return set()
+
+
+async def save_completed_orders(completed: set):
+    """Сохраняет ID выполненных заказов."""
+    async with aiofiles.open(COMPLETED_FILE, "w", encoding="utf-8") as f:
+        await f.write(json.dumps(list(completed), ensure_ascii=False))
+
+
+def parse_orders_from_log(log_content: str) -> list:
+    """Парсит заказы из лога. Возвращает список dict."""
+    orders = []
+    pattern = r"(📦 <b>Новый заказ</b>.*?id: <code>(\d+)</code>\))"
+    for match in re.finditer(pattern, log_content, re.DOTALL):
+        order_text = match.group(1).strip()
+        user_id = match.group(2)
+        # Извлекаем имя клиента
+        name_match = re.search(r"👤 Имя: (.+?)\n", order_text)
+        phone_match = re.search(r"📱 Телефон: (.+?)\n", order_text)
+        address_match = re.search(r"📍 Адрес: (.+?)\n", order_text)
+        category_match = re.search(r"📦 <b>Новый заказ</b> \| (.+?)\n", order_text)
+        orders.append({
+            "id": len(orders) + 1,
+            "user_id": user_id,
+            "name": name_match.group(1) if name_match else "—",
+            "phone": phone_match.group(1) if phone_match else "—",
+            "address": address_match.group(1) if address_match else "—",
+            "category": category_match.group(1) if category_match else "—",
+            "text": order_text,
+        })
+    return list(reversed(orders))  # Новые сверху
 
 
 def cancel_kb():
@@ -1729,6 +1772,118 @@ async def btn_maintenance(message: types.Message):
         await message.answer("⛔ Только админ.")
         return
     await cmd_maintenance(message)
+
+
+@dp.message(F.text == "📦 Заказы")
+async def btn_pending_orders(message: types.Message):
+    """Показывает все невыполненные заказы."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    try:
+        async with aiofiles.open(ORDER_LOG, "r", encoding="utf-8") as f:
+            log_content = await f.read()
+    except Exception:
+        await message.answer("⚠️ Не удалось загрузить историю заказов.")
+        return
+
+    completed = await load_completed_orders()
+    orders = parse_orders_from_log(log_content)
+    pending = [o for o in orders if o["id"] not in completed]
+
+    if not pending:
+        await message.answer("✅ Все заказы выполнены!")
+        return
+
+    keyboard = []
+    for order in pending[:20]:  # Показываем максимум 20
+        keyboard.append([InlineKeyboardButton(
+            text=f"📦 #{order['id']} {order['name']} ({order['category']})",
+            callback_data=f"order_view:{order['id']}"
+        )])
+
+    await message.answer(
+        f"📦 <b>Невыполненные заказы</b> ({len(pending)}):\n"
+        f"Нажмите на заказ для просмотра и отметки выполнения.",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+    )
+
+
+@dp.callback_query(F.data.startswith("order_view:"))
+async def cb_order_view(callback: types.CallbackQuery):
+    """Показывает детали заказа и кнопку выполнения."""
+    order_id = int(callback.data.split(":")[1])
+
+    try:
+        async with aiofiles.open(ORDER_LOG, "r", encoding="utf-8") as f:
+            log_content = await f.read()
+    except Exception:
+        await callback.answer("Ошибка загрузки!", show_alert=True)
+        return
+
+    orders = parse_orders_from_log(log_content)
+    order = next((o for o in orders if o["id"] == order_id), None)
+    if not order:
+        await callback.answer("Заказ не найден!", show_alert=True)
+        return
+
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Выполнен", callback_data=f"order_done:{order_id}")],
+        [InlineKeyboardButton(text="🔙 Назад к списку", callback_data="orders_list")],
+    ])
+
+    text = (
+        f"📦 <b>Заказ #{order['id']}</b>\n\n"
+        f"Категория: {order['category']}\n"
+        f"Клиент: {order['name']}\n"
+        f"Телефон: {order['phone']}\n"
+        f"Адрес: {order['address']}\n\n"
+        f"ID клиента: <code>{order['user_id']}</code>"
+    )
+
+    await callback.message.edit_text(text, reply_markup=kb)
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "orders_list")
+async def cb_orders_list(callback: types.CallbackQuery):
+    """Возврат к списку заказов."""
+    await callback.message.delete()
+    await btn_pending_orders(callback.message)
+    await callback.answer()
+
+
+@dp.callback_query(F.data.startswith("order_done:"))
+async def cb_order_done(callback: types.CallbackQuery):
+    """Отмечает заказ как выполненный."""
+    order_id = int(callback.data.split(":")[1])
+
+    completed = await load_completed_orders()
+    completed.add(order_id)
+    await save_completed_orders(completed)
+
+    try:
+        async with aiofiles.open(ORDER_LOG, "r", encoding="utf-8") as f:
+            log_content = await f.read()
+    except Exception:
+        await callback.answer("Ошибка!", show_alert=True)
+        return
+
+    orders = parse_orders_from_log(log_content)
+    order = next((o for o in orders if o["id"] == order_id), None)
+    name = order["name"] if order else "—"
+
+    # Обновляем сообщение
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🔙 Назад к списку", callback_data="orders_list")],
+    ])
+    await callback.message.edit_text(
+        f"✅ <b>Заказ #{order_id} выполнен!</b>\n\n"
+        f"Клиент: {name}",
+        reply_markup=kb
+    )
+    await callback.answer("Заказ отмечен как выполненный!")
 
 
 @dp.message(F.text == "📢 Рассылка")
