@@ -190,36 +190,35 @@ def settings_kb():
     ])
 
 
-def main_menu_kb(user_data: dict = None):
-    """Главное меню. Если админ — показываем админ-панель."""
-    buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
+def admin_menu_kb():
+    """Меню только для админа — без клиентских кнопок."""
+    buttons = [
+        [KeyboardButton(text="🛡️ Админ-панель")],
+        [KeyboardButton(text="👤 Мой профиль"), KeyboardButton(text="⚙️ Настройки")],
+    ]
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
-    # Если у пользователя есть сохранённый телефон — предлагаем повтор
+
+def main_menu_kb(user_data: dict = None):
+    """Главное меню клиента."""
+    buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
     if user_data and user_data.get("phone"):
         buttons.append([KeyboardButton(text="🔄 Повторить заказ")])
-
     buttons.append([KeyboardButton(text="📋 Мои заказы")])
     buttons.append([KeyboardButton(text="👤 Мой профиль")])
-
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
 def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
-    """Главное меню с проверкой админа по user_id."""
-    buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
+    """Главное меню. Админ видит только админ-кнопки, клиент — клиентские."""
+    if str(user_id) == str(ADMIN_ID):
+        return admin_menu_kb()
 
+    buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
     if user_data and user_data.get("phone"):
         buttons.append([KeyboardButton(text="🔄 Повторить заказ")])
-
     buttons.append([KeyboardButton(text="📋 Мои заказы")])
     buttons.append([KeyboardButton(text="👤 Мой профиль"), KeyboardButton(text="⚙️ Настройки")])
-
-    # Админ-кнопка — проверка по реальному ID
-    is_admin = (str(user_id) == str(ADMIN_ID))
-    logger.info(f"🔍 Проверка админа: user_id={user_id}, ADMIN_ID={ADMIN_ID}, is_admin={is_admin}")
-    if is_admin:
-        buttons.append([KeyboardButton(text="🛡️ Админ-панель")])
-
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
@@ -479,17 +478,28 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
     user_data = users[user_id]
     next_maint = calc_next_maintenance(user_data.get("joined"))
-    maint_info = ""
-    if next_maint:
-        maint_info = f"\n📅 Следующее ТО: {next_maint.strftime('%d.%m.%Y')}"
 
-    await message.answer(
-        f"Привет, {message.from_user.full_name}! 👋\n"
-        "Я приму ваш заказ и передам менеджеру.\n"
-        "Нажмите кнопку ниже, чтобы оформить заявку."
-        f"{maint_info}",
-        reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
-    )
+    # Админ — без клиентского приветствия
+    if str(user_id) == str(ADMIN_ID):
+        maint_info = ""
+        if next_maint:
+            maint_info = f"\n📅 Следующее ТО: {next_maint.strftime('%d.%m.%Y')}"
+        await message.answer(
+            f"Здравствуйте, Админ! 🛡️{maint_info}\n"
+            "Управляйте ботом через панель ниже.",
+            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+        )
+    else:
+        maint_info = ""
+        if next_maint:
+            maint_info = f"\n📅 Следующее ТО: {next_maint.strftime('%d.%m.%Y')}"
+        await message.answer(
+            f"Привет, {message.from_user.full_name}! 👋\n"
+            "Я приму ваш заказ и передам менеджеру.\n"
+            "Нажмите кнопку ниже, чтобы оформить заявку."
+            f"{maint_info}",
+            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+        )
 
 
 @dp.message(Command("help"))
