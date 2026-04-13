@@ -139,6 +139,12 @@ class RatingForm(StatesGroup):
     rating = State()
 
 
+class ProfileSettingsForm(StatesGroup):
+    editing_name = State()
+    editing_phone = State()
+    editing_address = State()
+
+
 # ─── Категории услуг ────────────────────────────────────────────────────────
 SERVICE_CATEGORIES = {
     "🔧 Ремонт": "Ремонт оборудования",
@@ -174,6 +180,16 @@ def maintenance_reminder_kb():
     ])
 
 
+def settings_kb():
+    """Inline-клавиатура настроек профиля."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✏️ Изменить имя", callback_data="settings_edit_name")],
+        [InlineKeyboardButton(text="📱 Изменить телефон", callback_data="settings_edit_phone")],
+        [InlineKeyboardButton(text="📍 Изменить адрес", callback_data="settings_edit_address")],
+        [InlineKeyboardButton(text="🔙 Назад", callback_data="settings_back")],
+    ])
+
+
 def main_menu_kb(user_data: dict = None):
     """Главное меню. Если админ — показываем админ-панель."""
     buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
@@ -196,7 +212,7 @@ def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
         buttons.append([KeyboardButton(text="🔄 Повторить заказ")])
 
     buttons.append([KeyboardButton(text="📋 Мои заказы")])
-    buttons.append([KeyboardButton(text="👤 Мой профиль")])
+    buttons.append([KeyboardButton(text="👤 Мой профиль"), KeyboardButton(text="⚙️ Настройки")])
 
     # Админ-кнопка — проверка по реальному ID
     is_admin = (str(user_id) == str(ADMIN_ID))
@@ -1419,6 +1435,121 @@ async def cancel_order(message: types.Message, state: FSMContext):
 @dp.message(F.text == "👤 Мой профиль")
 async def btn_profile(message: types.Message):
     await cmd_profile(message)
+
+
+@dp.message(F.text == "⚙️ Настройки")
+async def btn_settings(message: types.Message):
+    user_id = str(message.from_user.id)
+    users = await load_users()
+    user_data = users.get(user_id, {})
+
+    name = user_data.get("full_name", "—")
+    phone = user_data.get("phone", "—")
+    address = user_data.get("last_address", "—")
+
+    text = (
+        f"⚙️ <b>Мои настройки</b>\n\n"
+        f"👤 Имя: <b>{name}</b>\n"
+        f"📱 Телефон: <b>{phone}</b>\n"
+        f"📍 Адрес: <b>{address}</b>\n\n"
+        f"Выберите, что хотите изменить:"
+    )
+    await message.answer(text, reply_markup=settings_kb())
+
+
+@dp.callback_query(F.data == "settings_edit_name")
+async def cb_settings_name(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.edit_text("✏️ Введите новое имя:")
+    await state.set_state(ProfileSettingsForm.editing_name)
+
+
+@dp.callback_query(F.data == "settings_edit_phone")
+async def cb_settings_phone(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.edit_text("📱 Введите новый телефон:\n<i>(формат: +375XXXXXXXXX)</i>")
+    await state.set_state(ProfileSettingsForm.editing_phone)
+
+
+@dp.callback_query(F.data == "settings_edit_address")
+async def cb_settings_address(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.edit_text("📍 Введите новый адрес:")
+    await state.set_state(ProfileSettingsForm.editing_address)
+
+
+@dp.callback_query(F.data == "settings_back")
+async def cb_settings_back(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await state.clear()
+    await callback.message.edit_text("⚙️ Настройки отменены.")
+    users = await load_users()
+    user_id = str(callback.from_user.id)
+    user_data = users.get(user_id, {})
+    user_data["_user_id"] = user_id
+    await callback.message.answer("📋 Главное меню:", reply_markup=main_menu_kb_with_admin(user_id, user_data))
+
+
+# ─── Обработка ввода настроек ──────────────────────────────────────────────
+@dp.message(ProfileSettingsForm.editing_name)
+async def process_edit_name(message: types.Message, state: FSMContext):
+    name = message.text.strip()
+    if not name:
+        await message.answer("Имя не может быть пустым. Введите заново:")
+        return
+
+    user_id = str(message.from_user.id)
+    await update_user_field(user_id, "full_name", name)
+
+    await state.clear()
+    users = await load_users()
+    user_data = users.get(user_id, {})
+    user_data["_user_id"] = user_id
+    await message.answer(
+        f"✅ Имя изменено на: <b>{name}</b>",
+        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+    )
+
+
+@dp.message(ProfileSettingsForm.editing_phone)
+async def process_edit_phone(message: types.Message, state: FSMContext):
+    phone = message.text.strip()
+    if not phone_is_valid(phone):
+        await message.answer("Некорректный номер. Введите ещё раз:\n<i>(нужно 10-15 цифр)</i>")
+        return
+
+    normalized = normalize_phone(phone)
+    user_id = str(message.from_user.id)
+    await update_user_field(user_id, "phone", normalized)
+
+    await state.clear()
+    users = await load_users()
+    user_data = users.get(user_id, {})
+    user_data["_user_id"] = user_id
+    await message.answer(
+        f"✅ Телефон изменён на: <b>{normalized}</b>",
+        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+    )
+
+
+@dp.message(ProfileSettingsForm.editing_address)
+async def process_edit_address(message: types.Message, state: FSMContext):
+    address = message.text.strip()
+    if not address:
+        await message.answer("Адрес не может быть пустым. Введите заново:")
+        return
+
+    user_id = str(message.from_user.id)
+    await update_user_field(user_id, "last_address", address)
+
+    await state.clear()
+    users = await load_users()
+    user_data = users.get(user_id, {})
+    user_data["_user_id"] = user_id
+    await message.answer(
+        f"✅ Адрес изменён на: <b>{address}</b>",
+        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+    )
 
 
 @dp.message(F.text == "🛡️ Админ-панель")
