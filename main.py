@@ -728,13 +728,15 @@ async def process_broadcast(message: types.Message, state: FSMContext):
     status_msg = await message.answer(f"📢 Рассылка... 0/{total}")
 
     for user_id, user_data in users.items():
+        if isinstance(user_data, dict) and user_data.get("blocked"):
+            continue
         try:
             # Копируем сообщение (поддерживает текст, фото, и т.д.)
             if message.text:
                 await bot.send_message(int(user_id), message.text)
             sent += 1
         except Exception as e:
-            logger.warning(f"Не удалось отправить пользователю {user_id}: {e}")
+            await handle_send_error(e, user_id)
             failed += 1
 
         # Обновляем статус каждые 10 сообщений
@@ -1087,6 +1089,9 @@ async def process_rating(callback: types.CallbackQuery):
 # ─── Фича 9: Повторный заказ ────────────────────────────────────────────────
 @dp.message(F.text == "🔄 Повторить заказ")
 async def repeat_order(message: types.Message):
+    if str(message.from_user.id) == str(ADMIN_ID):
+        await message.answer("⛔ Администратор не может оформлять заказы.")
+        return
     user_id = str(message.from_user.id)
     users = await load_users()
     user_data = users.get(user_id, {})
@@ -1184,6 +1189,10 @@ async def confirm_repeat_order(message: types.Message):
 # ─── Фича 8: Категории услуг + обычный заказ ───────────────────────────────
 @dp.message(F.text == "🧾 Сделать заказ")
 async def start_order(message: types.Message, state: FSMContext):
+    if str(message.from_user.id) == str(ADMIN_ID):
+        await message.answer("⛔ Администратор не может оформлять заказы.")
+        return
+
     # Проверяем рабочее время
     await check_work_hours(message)
 
@@ -1492,6 +1501,36 @@ async def track_chat_member(event: types.ChatMemberUpdated, bot: Bot):
                     pass
 
 
+# ─── Админ: Удалить пользователя ───────────────────────────────────────────
+@dp.message(Command("delete_user"))
+async def cmd_delete_user(message: types.Message):
+    """Удаляет пользователя из базы."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2 or not args[1].strip().isdigit():
+        await message.answer(
+            "📋 Использование: /delete_user <ID_пользователя>\n\n"
+            "Пример: /delete_user 7599242480"
+        )
+        return
+
+    user_id = args[1].strip()
+    users = await load_users()
+
+    if user_id not in users:
+        await message.answer(f"❌ Пользователь {user_id} не найден.")
+        return
+
+    name = users[user_id].get("full_name", "—")
+    del users[user_id]
+    await save_users(users)
+
+    await message.answer(f"✅ Пользователь {name} ({user_id}) удалён.")
+
+
 # ─── Админ: Список заблокированных ─────────────────────────────────────────
 @dp.message(Command("blocked"))
 async def cmd_blocked(message: types.Message):
@@ -1677,6 +1716,9 @@ async def btn_export(message: types.Message):
 # ─── Фича: Мои заказы (история) ─────────────────────────────────────────────
 @dp.message(F.text == "📋 Мои заказы")
 async def my_orders(message: types.Message):
+    if str(message.from_user.id) == str(ADMIN_ID):
+        await message.answer("⛔ Это меню только для клиентов.")
+        return
     user_id = str(message.from_user.id)
 
     # Ищем в локальном логе
@@ -1744,6 +1786,8 @@ async def list_users(message: types.Message):
         text += "\n\n"
 
         for uid, data in page_users:
+            if str(uid) == str(ADMIN_ID):
+                continue
             if isinstance(data, dict):
                 username = data.get("username")
                 full_name = data.get("full_name")
@@ -1751,6 +1795,7 @@ async def list_users(message: types.Message):
                 address = data.get("last_address", "—")
                 joined = data.get("joined", "—")
                 ratings = data.get("ratings", [])
+                blocked = data.get("blocked", False)
                 avg_rating = f"{sum(ratings)/len(ratings):.1f}⭐" if ratings else "—"
 
                 if username:
@@ -1765,8 +1810,10 @@ async def list_users(message: types.Message):
                 address = "—"
                 joined = str(data)
                 avg_rating = "—"
+                blocked = False
 
-            text += f"• <b>{name_display}</b>\n"
+            status_icon = "🚫" if blocked else "•"
+            text += f"{status_icon} <b>{name_display}</b>\n"
             text += f"  ID: <code>{uid}</code> | 📱 {phone}\n"
             text += f"  📍 Адрес: {address}\n"
             text += f"  ⭐ {avg_rating} | 📅 {joined}\n\n"
@@ -1795,6 +1842,30 @@ def calc_next_maintenance(joined_str: str, last_maintenance_str: str = None) -> 
         return None
 
 
+async def handle_send_error(error, user_id):
+    """Обрабатывает ошибки отправки и помечает пользователя заблокированным."""
+    text = str(error).lower()
+    if any(blocked_word in text for blocked_word in ["blocked", "chat not found", "user is deactivated"]):
+        users = await load_users()
+        if user_id in users and isinstance(users[user_id], dict):
+            if not users[user_id].get("blocked"):
+                users[user_id]["blocked"] = True
+                await save_users(users)
+                logger.warning(f"🚫 Авто-блокировка: {user_id}")
+                if ADMIN_ID:
+                    try:
+                        await bot.send_message(
+                            ADMIN_ID,
+                            f"🚫 <b>Авто-блокировка</b>\n"
+                            f"Пользователь {user_id} помечен как заблокированный.\n"
+                            f"Причина: {error}"
+                        )
+                    except Exception:
+                        pass
+        return True
+    return False
+
+
 async def send_maintenance_reminder(user_id: str, user_data: dict, next_maint: datetime):
     """Отправляет напоминание пользователю."""
     days_left = (next_maint - datetime.now()).days
@@ -1816,7 +1887,7 @@ async def send_maintenance_reminder(user_id: str, user_data: dict, next_maint: d
         await bot.send_message(int(user_id), text, reply_markup=maintenance_reminder_kb())
         return True
     except Exception as e:
-        logger.warning(f"Не удалось отправить напоминание {user_id}: {e}")
+        await handle_send_error(e, user_id)
         return False
 
 
@@ -1917,6 +1988,12 @@ async def reminder_loop():
                             (user_id, user_data, next_maint, status_text)
                         )
                         logger.info(f"✅ Напоминание о ТО → {user_id} ({status_text})")
+                    else:
+                        # Проверка на блокировку
+                        try:
+                            await bot.send_message(int(ADMIN_ID), f"Test msg to {user_id}")
+                        except Exception as e:
+                            await handle_send_error(e, user_id)
 
             # Уведомляем админа списком
             if admin_notifications:
