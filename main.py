@@ -1492,6 +1492,31 @@ async def track_chat_member(event: types.ChatMemberUpdated, bot: Bot):
                     pass
 
 
+# ─── Админ: Список заблокированных ─────────────────────────────────────────
+@dp.message(Command("blocked"))
+async def cmd_blocked(message: types.Message):
+    """Показывает пользователей, заблокировавших бота."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    users = await load_users()
+    blocked = [(uid, data) for uid, data in users.items()
+               if isinstance(data, dict) and data.get("blocked")]
+
+    if not blocked:
+        await message.answer("✅ Заблокированных пользователей нет.")
+        return
+
+    text = f"🚫 Заблокированные ({len(blocked)}):\n\n"
+    for uid, data in blocked:
+        name = data.get("full_name", "—")
+        phone = data.get("phone", "—")
+        text += f"• {name} | {phone} | ID: <code>{uid}</code>\n"
+
+    await message.answer(text)
+
+
 @dp.callback_query(F.data == "settings_edit_name")
 async def cb_settings_name(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
