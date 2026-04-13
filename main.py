@@ -165,6 +165,15 @@ def skip_inline_kb():
     ])
 
 
+def maintenance_reminder_kb():
+    """Inline-клавиатура для напоминаний о ТО."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🧾 Записаться на ТО", callback_data="maint_order")],
+        [InlineKeyboardButton(text="👤 Мой профиль", callback_data="maint_profile")],
+        [InlineKeyboardButton(text="⏰ Напомнить через 7 дней", callback_data="maint_snooze:7")],
+    ])
+
+
 def main_menu_kb(user_data: dict = None):
     """Главное меню. Если админ — показываем админ-панель."""
     buttons = [[KeyboardButton(text="🧾 Сделать заказ")]]
@@ -965,6 +974,35 @@ async def callback_cancel_maint(callback: types.CallbackQuery):
     await callback.answer()
 
 
+# ─── Callback-кнопки напоминаний о ТО ──────────────────────────────────────
+@dp.callback_query(F.data == "maint_order")
+async def cb_maint_order(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.answer("🧾 Отлично! Выбирайте категорию услуги:")
+    await state.set_state(OrderForm.category)
+    await callback.message.answer("Выберите тип услуги:", reply_markup=category_kb())
+
+
+@dp.callback_query(F.data == "maint_profile")
+async def cb_maint_profile(callback: types.CallbackQuery):
+    await callback.answer()
+    await cmd_profile(callback.message)
+
+
+@dp.callback_query(F.data.startswith("maint_snooze:"))
+async def cb_maint_snooze(callback: types.CallbackQuery):
+    days = int(callback.data.split(":")[1])
+    user_id = str(callback.from_user.id)
+    users = await load_users()
+    if user_id in users and isinstance(users[user_id], dict):
+        # Сдвигаем дату следующего напоминания
+        new_reminder_date = (datetime.now() + timedelta(days=days)).isoformat()
+        users[user_id]["last_reminder_sent"] = new_reminder_date
+        await save_users(users)
+    await callback.message.edit_text(f"⏰ Хорошо! Напомню через {days} дн.")
+    await callback.answer("Напоминание отложено!")
+
+
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
 @dp.message(Command("export"))
 async def cmd_export(message: types.Message):
@@ -1584,7 +1622,7 @@ async def send_maintenance_reminder(user_id: str, user_data: dict, next_maint: d
             "Нажмите 🧾 Сделать заказ, чтобы записаться заранее."
         )
     try:
-        await bot.send_message(int(user_id), text)
+        await bot.send_message(int(user_id), text, reply_markup=maintenance_reminder_kb())
         return True
     except Exception as e:
         logger.warning(f"Не удалось отправить напоминание {user_id}: {e}")
