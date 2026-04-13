@@ -209,8 +209,13 @@ def main_menu_kb(user_data: dict = None):
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
-def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
-    """Главное меню. Админ видит только админ-кнопки, клиент — клиентские."""
+async def main_menu_kb_with_admin(user_id: str, user_data: dict = None):
+    """Главное меню. Админ — только админ-кнопки, клиент — клиентские.
+    Если user_data не передан — загружаем сами."""
+    if user_data is None:
+        users = await load_users()
+        user_data = users.get(user_id, {})
+
     if str(user_id) == str(ADMIN_ID):
         return admin_menu_kb()
 
@@ -487,7 +492,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
         await message.answer(
             f"Здравствуйте, Админ! 🛡️{maint_info}\n"
             "Управляйте ботом через панель ниже.",
-            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
     else:
         maint_info = ""
@@ -498,7 +503,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
             "Я приму ваш заказ и передам менеджеру.\n"
             "Нажмите кнопку ниже, чтобы оформить заявку."
             f"{maint_info}",
-            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
 
 
@@ -530,13 +535,13 @@ async def cmd_help(message: types.Message):
         "• Мои заказы — история заказов\n\n"
         "🕐 Часы работы: 08:00 — 20:00\n"
         f"{maint_info}",
-        reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+        reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
     )
 
 
 @dp.message(Command("profile"))
 async def cmd_profile(message: types.Message):
-    """Показывает профиль пользователя с датой следующего ТО."""
+    """Показывает профиль пользователя или админа."""
     users = await load_users()
     user_id = str(message.from_user.id)
     user_data = users.get(user_id, {})
@@ -545,11 +550,37 @@ async def cmd_profile(message: types.Message):
         await message.answer("⚠️ Вы ещё не зарегистрированы. Нажмите /start")
         return
 
+    # Админ — отдельный профиль
+    if str(user_id) == str(ADMIN_ID):
+        name = user_data.get("full_name", "—")
+        phone = user_data.get("phone", "—")
+        joined = user_data.get("joined", "—")[:10]
+        address = user_data.get("last_address", "—")
+        ratings = user_data.get("ratings", [])
+        avg_rating = round(sum(ratings) / len(ratings), 1) if ratings else "нет оценок"
+        blocked = "Да" if user_data.get("blocked") else "Нет"
+
+        text = (
+            f"🛡️ <b>Профиль администратора</b>\n\n"
+            f"Имя: {name}\n"
+            f"ID: <code>{user_id}</code>\n"
+            f"Телефон: {phone}\n"
+            f"Адрес: {address}\n"
+            f"Дата регистрации: {joined}\n"
+            f"Средняя оценка: {avg_rating}\n"
+            f"Заблокирован: {blocked}"
+        )
+        await message.answer(text, reply_markup=await main_menu_kb_with_admin(user_id, user_data))
+        return
+
+    # Профиль клиента
     name = user_data.get("full_name", "—")
     phone = user_data.get("phone", "—")
+    address = user_data.get("last_address", "—")
     joined = user_data.get("joined", "—")[:10]
     ratings = user_data.get("ratings", [])
     avg_rating = round(sum(ratings) / len(ratings), 1) if ratings else "нет оценок"
+    blocked = "🚫 Да" if user_data.get("blocked") else "Нет"
 
     next_maint = calc_next_maintenance(user_data.get("joined"))
     if next_maint:
@@ -565,13 +596,15 @@ async def cmd_profile(message: types.Message):
         f"👤 <b>Мой профиль</b>\n\n"
         f"Имя: {name}\n"
         f"Телефон: {phone}\n"
+        f"Адрес: {address}\n"
         f"Дата регистрации: {joined}\n"
-        f"Средняя оценка: {avg_rating}\n\n"
+        f"Средняя оценка: {avg_rating}\n"
+        f"Заблокирован: {blocked}\n\n"
         f"🔧 <b>ТО скважины</b> (каждые {MAINTENANCE_INTERVAL_MONTHS} мес.):\n"
         f"Статус: {maint_status}"
     )
 
-    await message.answer(text, reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
+    await message.answer(text, reply_markup=await main_menu_kb_with_admin(user_id, user_data))
 
 
 # ─── Фича 2: Статус заказа ──────────────────────────────────────────────────
@@ -1183,13 +1216,13 @@ async def confirm_repeat_order(message: types.Message):
         await message.answer(
             f"✅ Повторный заказ принят!\n"
             f"📋 ID задачи: <code>{task.get('id', '—')}</code>",
-            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
     except Exception as e:
         logger.exception("❌ Ошибка при создании задачи в YouGile")
         await message.answer(
             f"⚠️ Заказ принят, но ошибка в YouGile: {e}",
-            reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data)
+            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
         )
 
     # Очищаем FSM
@@ -1438,7 +1471,7 @@ async def finalize_order(message: types.Message, state: FSMContext):
 
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
-    await message.answer(response_text, reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
+    await message.answer(response_text, reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data))
     await state.clear()
 
 
@@ -1447,7 +1480,7 @@ async def cancel_order(message: types.Message, state: FSMContext):
     await state.clear()
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
-    await message.answer("Оформление заказа отменено.", reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
+    await message.answer("Оформление заказа отменено.", reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data))
 
 
 # ─── Кнопки главного меню ──────────────────────────────────────────────────
@@ -1592,11 +1625,8 @@ async def cb_settings_back(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
     await state.clear()
     await callback.message.edit_text("⚙️ Настройки отменены.")
-    users = await load_users()
     user_id = str(callback.from_user.id)
-    user_data = users.get(user_id, {})
-    user_data["_user_id"] = user_id
-    await callback.message.answer("📋 Главное меню:", reply_markup=main_menu_kb_with_admin(user_id, user_data))
+    await callback.message.answer("⚙️ Главное меню:", reply_markup=await main_menu_kb_with_admin(user_id))
 
 
 # ─── Обработка ввода настроек ──────────────────────────────────────────────
@@ -1616,7 +1646,7 @@ async def process_edit_name(message: types.Message, state: FSMContext):
     user_data["_user_id"] = user_id
     await message.answer(
         f"✅ Имя изменено на: <b>{name}</b>",
-        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+        reply_markup=await main_menu_kb_with_admin(user_id, user_data)
     )
 
 
@@ -1637,7 +1667,7 @@ async def process_edit_phone(message: types.Message, state: FSMContext):
     user_data["_user_id"] = user_id
     await message.answer(
         f"✅ Телефон изменён на: <b>{normalized}</b>",
-        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+        reply_markup=await main_menu_kb_with_admin(user_id, user_data)
     )
 
 
@@ -1657,7 +1687,7 @@ async def process_edit_address(message: types.Message, state: FSMContext):
     user_data["_user_id"] = user_id
     await message.answer(
         f"✅ Адрес изменён на: <b>{address}</b>",
-        reply_markup=main_menu_kb_with_admin(user_id, user_data)
+        reply_markup=await main_menu_kb_with_admin(user_id, user_data)
     )
 
 
@@ -1674,7 +1704,7 @@ async def btn_back(message: types.Message):
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
     user_data["_user_id"] = str(message.from_user.id)
-    await message.answer("📋 Главное меню:", reply_markup=main_menu_kb_with_admin(str(message.from_user.id), user_data))
+    await message.answer("📋 Главное меню:", reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data))
 
 
 @dp.message(F.text == "👥 Пользователи")
