@@ -202,7 +202,8 @@ def admin_panel_kb():
     """Клавиатура админ-панели."""
     buttons = [
         [KeyboardButton(text="👥 Пользователи"), KeyboardButton(text="📊 Статистика")],
-        [KeyboardButton(text="🔧 ТО статус"), KeyboardButton(text="📢 Рассылка")],
+        [KeyboardButton(text="🔧 ТО статус"), KeyboardButton(text="✅ Отметить ТО")],
+        [KeyboardButton(text="📢 Рассылка")],
         [KeyboardButton(text="📥 Экспорт CSV")],
         [KeyboardButton(text="🔙 Назад")],
     ]
@@ -852,48 +853,102 @@ async def cmd_sync_dates(message: types.Message):
 
 
 # ─── Админ: Отметить ТО (заказ по телефону) ────────────────────────────────
-@dp.message(Command("mark_maintenance"))
-async def cmd_mark_maintenance(message: types.Message):
-    """Отметить, что ТО проведено (клиент позвонил напрямую)."""
+@dp.message(F.text == "✅ Отметить ТО")
+async def btn_mark_maintenance(message: types.Message):
+    """Показать список пользователей для отметки ТО."""
     if str(message.from_user.id) != str(ADMIN_ID):
         await message.answer("⛔ Только админ.")
         return
 
-    args = message.text.split(maxsplit=1)
-    if len(args) < 2 or not args[1].strip().isdigit():
-        await message.answer(
-            "📋 Использование: /mark_maintenance <ID_пользователя>\n\n"
-            "Пример: /mark_maintenance 7599242480\n\n"
-            "Это обновит дату следующего ТО и сбросит напоминание."
-        )
-        return
+    users = await load_users()
+    keyboard = []
+    count = 0
 
-    user_id = args[1].strip()
+    for uid, data in sorted(users.items(), key=lambda x: x[1].get("full_name", "")):
+        if not isinstance(data, dict):
+            continue
+        name = data.get("full_name", "—")
+        phone = data.get("phone", "")
+        next_maint = calc_next_maintenance(data.get("joined"))
+        if next_maint:
+            days = (next_maint - datetime.now()).days
+            status = "🔴" if days <= 0 else "🟡" if days <= 30 else "🟢"
+        else:
+            status = "⚪"
+
+        keyboard.append([InlineKeyboardButton(
+            text=f"{status} {name}",
+            callback_data=f"maint_user:{uid}"
+        )])
+        count += 1
+
+    await message.answer(
+        f"✅ <b>Отметить ТО</b>\nВыберите пользователя:\n"
+        f"🟢 В норме | 🟡 Скоро | 🔴 Просрочено",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+    )
+
+
+@dp.callback_query(F.data.startswith("maint_user:"))
+async def callback_confirm_maint(callback: types.CallbackQuery):
+    """Подтверждение отметки ТО."""
+    user_id = callback.data.split(":")[1]
+    users = await load_users()
+    user_data = users.get(user_id, {})
+    name = user_data.get("full_name", "—")
+    phone = user_data.get("phone", "—")
+    next_maint = calc_next_maintenance(user_data.get("joined"))
+    next_str = next_maint.strftime("%d.%m.%Y") if next_maint else "—"
+
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Подтвердить", callback_data=f"maint_confirm:{user_id}")],
+        [InlineKeyboardButton(text="🔙 Отмена", callback_data="maint_cancel")],
+    ])
+
+    await callback.message.edit_text(
+        f"Отметить ТО для:\n"
+        f"👤 {name}\n"
+        f"📱 {phone}\n"
+        f"📅 Следующее ТО: {next_str}\n\n"
+        "Дата ТО обновится на сегодня. Подтвердить?"
+    )
+    await callback.message.answer("⬆️ Подтвердите или отмените:", reply_markup=kb)
+    await callback.answer()
+
+
+@dp.callback_query(F.data.startswith("maint_confirm:"))
+async def callback_do_maint(callback: types.CallbackQuery):
+    """Выполнить отметку ТО."""
+    user_id = callback.data.split(":")[1]
     users = await load_users()
 
     if user_id not in users or not isinstance(users[user_id], dict):
-        await message.answer(f"❌ Пользователь {user_id} не найден.")
+        await callback.answer("Пользователь не найден!", show_alert=True)
         return
 
     now = datetime.now()
     users[user_id]["last_reminder_sent"] = now.isoformat()
     users[user_id]["reminder_sent"] = False
-
-    # Обновляем joined на текущую дату — следующее ТО через 6 месяцев от сегодня
     users[user_id]["joined"] = now.isoformat()
-
     await save_users(users)
 
     name = users[user_id].get("full_name", "—")
     phone = users[user_id].get("phone", "—")
     next_to = now + timedelta(days=MAINTENANCE_INTERVAL_MONTHS * 30)
 
-    await message.answer(
+    await callback.message.edit_text(
         f"✅ ТО отмечено как проведённое:\n\n"
         f"👤 {name} ({user_id})\n"
         f"📱 {phone}\n"
         f"📅 Следующее ТО: {next_to.strftime('%d.%m.%Y')}"
     )
+    await callback.answer("ТО отмечено!")
+
+
+@dp.callback_query(F.data == "maint_cancel")
+async def callback_cancel_maint(callback: types.CallbackQuery):
+    await callback.message.edit_text("Отменено.")
+    await callback.answer()
 
 
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
