@@ -689,6 +689,12 @@ async def cmd_broadcast(message: types.Message, state: FSMContext):
 
 @dp.message(BroadcastForm.message)
 async def process_broadcast(message: types.Message, state: FSMContext):
+    # Проверка на отмену
+    if message.text and message.text.strip().lower() in ("/cancel", "отмена", "назад"):
+        await message.answer("❌ Рассылка отменена.")
+        await state.clear()
+        return
+
     users = await load_users()
     total = len(users)
     sent = 0
