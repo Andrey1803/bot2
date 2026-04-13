@@ -851,6 +851,51 @@ async def cmd_sync_dates(message: types.Message):
     await message.answer(text)
 
 
+# ─── Админ: Отметить ТО (заказ по телефону) ────────────────────────────────
+@dp.message(Command("mark_maintenance"))
+async def cmd_mark_maintenance(message: types.Message):
+    """Отметить, что ТО проведено (клиент позвонил напрямую)."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2 or not args[1].strip().isdigit():
+        await message.answer(
+            "📋 Использование: /mark_maintenance <ID_пользователя>\n\n"
+            "Пример: /mark_maintenance 7599242480\n\n"
+            "Это обновит дату следующего ТО и сбросит напоминание."
+        )
+        return
+
+    user_id = args[1].strip()
+    users = await load_users()
+
+    if user_id not in users or not isinstance(users[user_id], dict):
+        await message.answer(f"❌ Пользователь {user_id} не найден.")
+        return
+
+    now = datetime.now()
+    users[user_id]["last_reminder_sent"] = now.isoformat()
+    users[user_id]["reminder_sent"] = False
+
+    # Обновляем joined на текущую дату — следующее ТО через 6 месяцев от сегодня
+    users[user_id]["joined"] = now.isoformat()
+
+    await save_users(users)
+
+    name = users[user_id].get("full_name", "—")
+    phone = users[user_id].get("phone", "—")
+    next_to = now + timedelta(days=MAINTENANCE_INTERVAL_MONTHS * 30)
+
+    await message.answer(
+        f"✅ ТО отмечено как проведённое:\n\n"
+        f"👤 {name} ({user_id})\n"
+        f"📱 {phone}\n"
+        f"📅 Следующее ТО: {next_to.strftime('%d.%m.%Y')}"
+    )
+
+
 # ─── Админ: Экспорт пользователей ───────────────────────────────────────────
 @dp.message(Command("export"))
 async def cmd_export(message: types.Message):
