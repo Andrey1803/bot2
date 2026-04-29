@@ -23,6 +23,7 @@ from aiogram.client.default import DefaultBotProperties
 
 from config import API_TOKEN, ADMIN_ID, YOUGILE_WEBHOOK_SECRET
 from tools.yougile_api import create_task, search_tasks_by_user, get_tasks_for_stats, get_column_name
+from tools.dispatcher_api import send_order_to_dispatcher
 
 import aiofiles
 
@@ -70,46 +71,50 @@ DEFAULT_USERS = {
 }
 
 def _init_data_files():
-    """Инициализирует файлы данных."""
+    """Инициализирует файлы данных без перезаписи рабочей базы."""
     os.makedirs("data", exist_ok=True)
     
     print(f"🐍 PWD: {os.getcwd()}")
     print(f"📂 Files in data/: {os.listdir('data')}")
     sys.stdout.flush()
 
-    needs_restore = False
+    # Важно: не затираем users.json дефолтными данными при каждом спорном кейсе.
+    # Дефолт используем только при полном отсутствии файла (пустой volume/первый старт).
+    needs_seed_default = False
     if not os.path.exists(USER_FILE):
-        print("⚠️ users.json не существует — восстановим")
-        needs_restore = True
+        print("⚠️ users.json не существует — создадим стартовый файл")
+        needs_seed_default = True
     else:
         size = os.path.getsize(USER_FILE)
         print(f"📊 users.json размер: {size} байт")
-        if size == 0:
-            print("⚠️ users.json пустой (0 байт) — восстановим")
-            needs_restore = True
-        else:
+        if size > 0:
             try:
                 with open(USER_FILE, "r", encoding="utf-8") as f:
                     content = f.read().strip()
                 print(f"📄 users.json содержимое: {content[:100]}...")
-                if not content or content == "{}" or content == "[]":
-                    print("⚠️ users.json пустой — восстановим")
-                    needs_restore = True
-                else:
-                    data = json.loads(content)
+                data = json.loads(content) if content else {}
+                if isinstance(data, dict):
                     print(f"👥 Текущих пользователей: {len(data)}")
-                    if len(data) < 2:
-                        print("⚠️ Мало пользователей — восстановим")
-                        needs_restore = True
+                else:
+                    print("⚠️ users.json не объект JSON — данные не трогаем, проверьте вручную")
             except Exception as e:
-                print(f"⚠️ Ошибка чтения users.json: {e} — восстановим")
-                needs_restore = True
+                backup_file = f"{USER_FILE}.broken.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                try:
+                    if os.path.exists(USER_FILE):
+                        os.replace(USER_FILE, backup_file)
+                    with open(USER_FILE, "w", encoding="utf-8") as f:
+                        json.dump({}, f, ensure_ascii=False, indent=2)
+                    print(f"⚠️ users.json повреждён: {e}")
+                    print(f"🛟 Бэкап сохранён: {backup_file}")
+                    print("✅ Создан новый пустой users.json (без автовосстановления дефолта)")
+                except Exception as backup_err:
+                    print(f"❌ Ошибка аварийного восстановления users.json: {backup_err}")
 
-    if needs_restore:
-        print("🔨 ЗАПИСЬ USERS.JSON...")
+    if needs_seed_default:
+        print("🔨 Создаём users.json из DEFAULT_USERS (первый запуск)")
         with open(USER_FILE, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_USERS, f, ensure_ascii=False, indent=2)
-        print(f"✅ users.json восстановлен: {len(DEFAULT_USERS)} пользователей")
+        print(f"✅ users.json создан: {len(DEFAULT_USERS)} пользователей")
     else:
         print("✅ users.json в порядке")
     
@@ -1256,6 +1261,15 @@ async def confirm_repeat_order(message: types.Message):
 
     try:
         task = create_task(title=f"Повторный заказ от {name}", description=summary)
+        send_order_to_dispatcher(
+            category="Повторный заказ",
+            name=name,
+            phone=phone,
+            address=address,
+            comment=comment,
+            telegram_user_id=str(message.from_user.id),
+            telegram_full_name=message.from_user.full_name or name,
+        )
         await message.answer(
             f"✅ Повторный заказ принят!\n"
             f"📋 ID задачи: <code>{task.get('id', '—')}</code>",
@@ -1487,6 +1501,15 @@ async def finalize_order(message: types.Message, state: FSMContext):
         task = create_task(
             title=f"Заказ: {category} — {name}",
             description=summary
+        )
+        send_order_to_dispatcher(
+            category=category,
+            name=name,
+            phone=phone,
+            address=address,
+            comment=comment,
+            telegram_user_id=str(message.from_user.id),
+            telegram_full_name=message.from_user.full_name or name,
         )
         task_id = task.get("id", "—")
 

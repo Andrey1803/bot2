@@ -32,3 +32,10 @@ BOARD_ID = os.getenv("BOARD_ID", "")
 
 # Секрет для проверки вебхуков от YouGile
 YOUGILE_WEBHOOK_SECRET = os.getenv("YOUGILE_WEBHOOK_SECRET", "")
+
+# Интеграция с «Диспетчер задач» (опционально)
+DISPATCHER_API_URL = os.getenv("DISPATCHER_API_URL", "").strip().rstrip("/")
+DISPATCHER_INBOUND_API_KEY = os.getenv("DISPATCHER_INBOUND_API_KEY", "").strip()
+DISPATCHER_GROUP_ID = os.getenv("DISPATCHER_GROUP_ID", "").strip()
+DISPATCHER_COMPANY_NAME = os.getenv("DISPATCHER_COMPANY_NAME", "").strip()
+DISPATCHER_GROUP_NAME = os.getenv("DISPATCHER_GROUP_NAME", "").strip()

@@ -57,6 +57,11 @@ cp .env.example .env
 | `ADMIN_ID` | Telegram ID администратора для уведомлений |
 | `PROJECT_ID` | ID проекта YouGile (для утилит) |
 | `YOUGILE_WEBHOOK_SECRET` | Секрет для проверки вебхуков |
+| `DISPATCHER_API_URL` | URL API «Диспетчер задач» (если нужна параллельная запись заявок) |
+| `DISPATCHER_INBOUND_API_KEY` | Ключ `DISPATCHER_INBOUND_API_KEY` из API диспетчера |
+| `DISPATCHER_GROUP_ID` | Целевая группа в диспетчере (приоритетный вариант) |
+| `DISPATCHER_COMPANY_NAME` | Имя компании для авто-создания/поиска, если `DISPATCHER_GROUP_ID` не задан |
+| `DISPATCHER_GROUP_NAME` | Имя группы при авто-создании (по умолчанию `Заявки Telegram`) |
 
 ### 5. Запуск
 
@@ -85,6 +90,7 @@ docker run -d \
 1. Подключите репозиторий к [Railway](https://railway.app)
 2. Добавьте переменные окружения в настройках проекта
 3. Railway автоматически запустит бот через `railway.json`
+4. Подключите `Volume` и смонтируйте в `/app/data`, чтобы `data/users.json` и `data/orders.log` не терялись при деплое
 
 ## Утилиты
 
