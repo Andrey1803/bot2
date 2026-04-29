@@ -1,9 +1,11 @@
 {
-  "$schema": "https://railway.app/railway.schema.json",
+  "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile"
   },
   "deploy": {
+    "preDeployCommand": "python -m compileall -q .",
     "startCommand": "python main.py",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
