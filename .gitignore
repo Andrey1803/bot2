@@ -37,3 +37,6 @@ Thumbs.db
 
 # Railway
 .railway/
+
+# Локальные настройки/кэш инструментов
+.qwen/
