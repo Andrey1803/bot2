@@ -168,11 +168,26 @@ def category_kb():
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
-def skip_inline_kb():
-    """Inline-кнопка 'Пропустить'."""
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip_field")]
-    ])
+def comment_step_kb() -> ReplyKeyboardMarkup:
+    """Комментарий: крупные кнопки (удобнее, чем только inline)."""
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="⏭️ Без комментария")],
+            [KeyboardButton(text="❌ Отмена")],
+        ],
+        resize_keyboard=True,
+    )
+
+
+def photo_step_kb() -> ReplyKeyboardMarkup:
+    """Фото: крупная кнопка пропуска + отмена."""
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="⏭️ Без фото")],
+            [KeyboardButton(text="❌ Отмена")],
+        ],
+        resize_keyboard=True,
+    )
 
 
 def maintenance_reminder_kb():
@@ -317,7 +332,7 @@ def phone_is_valid(phone: str) -> bool:
 
 # Слова «пропустить фото» — иначе любой текст на шаге фото завершал заказ по ошибке
 _SKIP_PHOTO_TEXT = frozenset(
-    {"пропустить", "нет", "-", "без фото", "не надо", "далее", "skip", "ок", "no"},
+    {"пропустить", "нет", "-", "без фото", "не надо", "далее", "skip", "ок", "no", "⏭️ без фото"},
 )
 
 
@@ -448,19 +463,26 @@ async def prompt_comment_after_phone(message: types.Message, state: FSMContext, 
     raw = (users.get(user_id, {}) or {}).get("last_address")
     if isinstance(raw, str) and raw.strip():
         await state.set_state(OrderForm.comment)
+        pdata = users.get(user_id, {}) or {}
+        pphone = (pdata.get("phone") or "").strip()
+        st = await state.get_data()
+        cur_phone = (st.get("phone") or "").strip()
+        if pphone and cur_phone == pphone:
+            await message.answer(f"📱 Телефон в заказе: <b>{pphone}</b> (из настроек).")
         await message.answer(
-            "Напишите комментарий к заказу:\n"
-            "<i>(или нажмите «⏭️ Пропустить»)</i>",
-            reply_markup=skip_inline_kb(),
+            "📝 <b>Шаг 1 из 2</b> — комментарий\n"
+            "Напишите текст или нажмите «⏭️ Без комментария».",
+            reply_markup=comment_step_kb(),
         )
         return True
     await state.clear()
     await message.answer(
         "Чтобы оформить заказ, укажите в профиле <b>адрес объекта</b>:\n"
-        "«⚙️ Настройки» → «📍 Изменить адрес».\n"
-        "Имя в заказе — «✏️ Изменить имя» там же.\n\n"
-        "После сохранения снова нажмите «🧾 Сделать заказ».",
-        reply_markup=await main_menu_kb_with_admin(user_id, users.get(user_id, {}) or {}),
+        "«⚙️ Настройки» → «📍 Изменить адрес».\n\n"
+        "Нажмите кнопку ниже — откроются настройки:",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text="⚙️ Открыть настройки", callback_data="order_open_settings")]],
+        ),
     )
     return False
 
@@ -1137,7 +1159,7 @@ async def cb_maint_order(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(OrderForm.category)
     await callback.message.answer(
         "Выберите тип услуги.\n"
-        "<i>Имя, телефон и адрес — из «⚙️ Настройки», если заданы.</i>",
+        "<i>Данные из «⚙️ Настройки»; дальше комментарий и фото.</i>",
         reply_markup=category_kb(),
     )
 
@@ -1377,7 +1399,7 @@ async def start_order(message: types.Message, state: FSMContext):
     await state.set_state(OrderForm.category)
     await message.answer(
         "Выберите тип услуги.\n"
-        "<i>Имя, телефон и адрес в заказе берутся из «⚙️ Настройки», если указаны — вводить снова не нужно.</i>",
+        "<i>Данные из «⚙️ Настройки» подставляются сами. Дальше — 2 шага: комментарий и фото (фото можно пропустить).</i>",
         reply_markup=category_kb(),
     )
 
@@ -1435,35 +1457,17 @@ async def process_phone(message: types.Message, state: FSMContext):
 
 @dp.message(OrderForm.comment)
 async def process_comment(message: types.Message, state: FSMContext):
-    comment = message.text.strip()
-    if comment.lower() in ("пропустить", "нет", "-", "без комментария"):
+    comment = (message.text or "").strip()
+    if comment == "⏭️ Без комментария" or comment.lower() in ("пропустить", "нет", "-", "без комментария"):
         comment = "—"
 
     await state.update_data(comment=comment)
     await state.set_state(OrderForm.photo)
     await message.answer(
-        "📸 Прикрепите фото объекта (необязательно):\n"
-        "<i>Или нажмите «⏭️ Пропустить»</i>",
-        reply_markup=skip_inline_kb()
+        "📸 <b>Шаг 2 из 2</b> — фото объекта\n"
+        "Пришлите снимок или нажмите «⏭️ Без фото».",
+        reply_markup=photo_step_kb(),
     )
-
-
-@dp.callback_query(F.data == "skip_field", StateFilter(OrderForm))
-async def callback_skip_field(callback: types.CallbackQuery, state: FSMContext):
-    """Обработка нажатия inline-кнопки 'Пропустить'."""
-    current_state = await state.get_state()
-    
-    if current_state == "OrderForm:comment":
-        await state.update_data(comment="—")
-        await state.set_state(OrderForm.photo)
-        await callback.message.edit_text("📸 Прикрепите фото объекта (необязательно):")
-        await callback.message.answer("⏭️ Комментарий пропущен. Отправьте фото или нажмите «Пропустить».", reply_markup=skip_inline_kb())
-    elif current_state == "OrderForm:photo":
-        await state.update_data(photo_file_id=None)
-        await callback.message.edit_text("📸 Фото пропущено")
-        await finalize_order(callback.message, state)
-    
-    await callback.answer()
 
 
 # ─── Фича 4: Фото к заказу ──────────────────────────────────────────────────
@@ -1478,14 +1482,14 @@ async def process_photo(message: types.Message, state: FSMContext):
 @dp.message(OrderForm.photo)
 async def skip_photo(message: types.Message, state: FSMContext):
     t = (message.text or "").strip().lower()
-    if t in _SKIP_PHOTO_TEXT:
+    if (message.text or "").strip() == "⏭️ Без фото" or t in _SKIP_PHOTO_TEXT:
         await state.update_data(photo_file_id=None)
         await finalize_order(message, state)
         return
     await message.answer(
-        "Отправьте <b>фото</b> или нажмите «⏭️ Пропустить» под сообщением про фото.\n"
-        "Произвольный текст здесь не принимаем — чтобы заказ не ушёл случайно.",
-        reply_markup=skip_inline_kb(),
+        "Пришлите <b>фото</b> или нажмите «⏭️ Без фото».\n"
+        "Произвольный текст не принимаем — чтобы заказ не ушёл случайно.",
+        reply_markup=photo_step_kb(),
     )
 
 
@@ -1602,6 +1606,11 @@ async def btn_profile(message: types.Message):
 
 @dp.message(F.text == "⚙️ Настройки")
 async def btn_settings(message: types.Message):
+    await answer_settings_panel(message)
+
+
+async def answer_settings_panel(message: types.Message) -> None:
+    """Текст и клавиатура «Мои настройки» (общая для кнопки и callback)."""
     user_id = str(message.from_user.id)
     users = await load_users()
     user_data = users.get(user_id, {})
@@ -1615,10 +1624,23 @@ async def btn_settings(message: types.Message):
         f"👤 Имя: <b>{name}</b>\n"
         f"📱 Телефон: <b>{phone}</b>\n"
         f"📍 Адрес: <b>{address}</b>\n\n"
-        f"Имя и адрес используются в заказах автоматически.\n"
+        f"Имя, телефон и адрес подставляются в заказ автоматически.\n"
         f"Выберите, что хотите изменить:"
     )
     await message.answer(text, reply_markup=settings_kb())
+
+
+@dp.callback_query(F.data == "order_open_settings")
+async def cb_order_open_settings(callback: types.CallbackQuery):
+    """Из блока «нет адреса» — сразу открыть настройки."""
+    await callback.answer()
+    uid = str(callback.from_user.id)
+    users = await load_users()
+    await answer_settings_panel(callback.message)
+    await callback.message.answer(
+        "После сохранения адреса снова нажмите «🧾 Сделать заказ».",
+        reply_markup=await main_menu_kb_with_admin(uid, users.get(uid, {}) or {}),
+    )
 
 
 # ─── Отслеживание блокировки бота ──────────────────────────────────────────
