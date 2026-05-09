@@ -312,9 +312,15 @@ def rating_kb():
 
 # ─── Утилиты ─────────────────────────────────────────────────────────────────
 def phone_is_valid(phone: str) -> bool:
-    """Проверяет, что телефон содержит 10-14 цифр (поддержка BY номеров)."""
+    """Проверяет, что телефон содержит 10–15 цифр (поддержка BY/RU номеров)."""
     digits = re.sub(r"\D", "", phone)
     return 10 <= len(digits) <= 15
+
+
+# Слова «пропустить фото» — иначе любой текст на шаге фото завершал заказ по ошибке
+_SKIP_PHOTO_TEXT = frozenset(
+    {"пропустить", "нет", "-", "без фото", "не надо", "далее", "skip", "ок", "no"},
+)
 
 
 def normalize_phone(phone: str) -> str:
@@ -417,6 +423,21 @@ async def update_user_field(user_id: str, field: str, value):
     if user_id in users:
         users[user_id][field] = value
         await save_users(users)
+
+
+async def prompt_address_step(message: types.Message, user_id: str) -> None:
+    """Шаг адреса: предлагаем последний сохранённый или просим ввести."""
+    users = await load_users()
+    raw = (users.get(user_id, {}) or {}).get("last_address")
+    saved = raw.strip() if isinstance(raw, str) else ""
+    if saved:
+        await message.answer(
+            f"Адрес объекта: <b>{saved}</b>?\n"
+            "Введите другой адрес или отправьте «Да», чтобы оставить этот:",
+            reply_markup=cancel_kb(),
+        )
+    else:
+        await message.answer("Введите адрес объекта:", reply_markup=cancel_kb())
 
 
 # ─── Миграция старого формата ────────────────────────────────────────────────
@@ -1361,17 +1382,19 @@ async def process_name(message: types.Message, state: FSMContext):
     if not name:
         await message.answer("Имя не может быть пустым. Введите ваше имя:")
         return
+    user_id = str(message.from_user.id)
+    users = await load_users()
+    saved_name = (users.get(user_id, {}) or {}).get("full_name")
     if name.lower() in ("да", "yes", "ok"):
-        users = await load_users()
-        user_id = str(message.from_user.id)
-        name = users.get(user_id, {}).get("full_name", name)
+        if not saved_name:
+            await message.answer("Сохранённого имени нет. Введите имя текстом:")
+            return
+        name = saved_name
 
     await state.update_data(name=name)
     await state.set_state(OrderForm.phone)
 
     # Фича 1: Если телефон уже сохранён — предлагаем его
-    users = await load_users()
-    user_id = str(message.from_user.id)
     user_data = users.get(user_id, {})
     saved_phone = user_data.get("phone")
 
@@ -1403,7 +1426,7 @@ async def process_phone(message: types.Message, state: FSMContext):
             return
         await state.update_data(phone=phone)
         await state.set_state(OrderForm.address)
-        await message.answer("Введите адрес объекта:", reply_markup=cancel_kb())
+        await prompt_address_step(message, user_id)
         return
 
     if not phone_is_valid(phone):
@@ -1421,7 +1444,7 @@ async def process_phone(message: types.Message, state: FSMContext):
     await update_user_field(user_id, "phone", normalized)
 
     await state.set_state(OrderForm.address)
-    await message.answer("Введите адрес объекта:", reply_markup=cancel_kb())
+    await prompt_address_step(message, user_id)
 
 
 @dp.message(OrderForm.address)
@@ -1430,6 +1453,14 @@ async def process_address(message: types.Message, state: FSMContext):
     if not address:
         await message.answer("Адрес не может быть пустым. Введите адрес:")
         return
+    user_id = str(message.from_user.id)
+    if address.lower() in ("да", "yes", "ok"):
+        users = await load_users()
+        raw = (users.get(user_id, {}) or {}).get("last_address")
+        address = raw.strip() if isinstance(raw, str) else ""
+        if not address:
+            await message.answer("Нет сохранённого адреса. Введите адрес текстом:")
+            return
     await state.update_data(address=address)
     await state.set_state(OrderForm.comment)
     await message.answer(
@@ -1483,8 +1514,16 @@ async def process_photo(message: types.Message, state: FSMContext):
 
 @dp.message(OrderForm.photo)
 async def skip_photo(message: types.Message, state: FSMContext):
-    await state.update_data(photo_file_id=None)
-    await finalize_order(message, state)
+    t = (message.text or "").strip().lower()
+    if t in _SKIP_PHOTO_TEXT:
+        await state.update_data(photo_file_id=None)
+        await finalize_order(message, state)
+        return
+    await message.answer(
+        "Отправьте <b>фото</b> или нажмите «⏭️ Пропустить» под сообщением про фото.\n"
+        "Произвольный текст здесь не принимаем — чтобы заказ не ушёл случайно.",
+        reply_markup=skip_inline_kb(),
+    )
 
 
 async def finalize_order(message: types.Message, state: FSMContext):
