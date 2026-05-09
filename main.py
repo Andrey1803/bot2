@@ -1137,7 +1137,7 @@ async def cb_maint_order(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(OrderForm.category)
     await callback.message.answer(
         "Выберите тип услуги.\n"
-        "<i>Имя и адрес в заказе — из «⚙️ Настройки».</i>",
+        "<i>Имя, телефон и адрес — из «⚙️ Настройки», если заданы.</i>",
         reply_markup=category_kb(),
     )
 
@@ -1377,7 +1377,7 @@ async def start_order(message: types.Message, state: FSMContext):
     await state.set_state(OrderForm.category)
     await message.answer(
         "Выберите тип услуги.\n"
-        "<i>Имя и адрес в заказе берутся из «⚙️ Настройки» (не нужно вводить каждый раз).</i>",
+        "<i>Имя, телефон и адрес в заказе берутся из «⚙️ Настройки», если указаны — вводить снова не нужно.</i>",
         reply_markup=category_kb(),
     )
 
@@ -1389,9 +1389,15 @@ async def process_category(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(category=message.text)
-    await state.set_state(OrderForm.phone)
     user_id = str(message.from_user.id)
-    await prompt_phone_step(message, user_id)
+    users = await load_users()
+    saved_phone = ((users.get(user_id, {}) or {}).get("phone") or "").strip()
+    if saved_phone:
+        await state.update_data(phone=saved_phone)
+        await prompt_comment_after_phone(message, state, user_id)
+    else:
+        await state.set_state(OrderForm.phone)
+        await prompt_phone_step(message, user_id)
 
 
 @dp.message(OrderForm.phone)
