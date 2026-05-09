@@ -354,6 +354,31 @@ def normalize_phone(phone: str) -> str:
     return "+" + digits
 
 
+def _is_placeholder_display_name(value: str | None) -> bool:
+    """Пустое имя или «заглушка» вроде одного дефиса — не использовать в заголовке заказа."""
+    if value is None:
+        return True
+    t = value.strip()
+    if not t:
+        return True
+    compact = t.replace(" ", "").replace("\u00a0", "").replace("\u2009", "")
+    return compact in ("-", "—", "–", "―", "...", "…")
+
+
+def display_contact_name_for_order(message: types.Message, prof: dict) -> str:
+    """Имя в заказе: профиль → имя в Telegram → @username → «Клиент …»."""
+    raw = prof.get("full_name")
+    if isinstance(raw, str) and not _is_placeholder_display_name(raw):
+        return raw.strip()
+    fn = (message.from_user.full_name or "").strip()
+    if fn and not _is_placeholder_display_name(fn):
+        return fn
+    un = (message.from_user.username or "").strip()
+    if un:
+        return f"@{un}"
+    return f"Клиент {message.from_user.id}"
+
+
 def is_work_time() -> bool:
     """Проверяет, находится ли текущее время в рабочем диапазоне."""
     now_utc = datetime.now(timezone.utc)
@@ -1297,7 +1322,7 @@ async def confirm_repeat_order(message: types.Message):
     users = await load_users()
     user_data = users.get(user_id, {})
 
-    name = (user_data.get("full_name") or "").strip() or (message.from_user.full_name or "—")
+    name = display_contact_name_for_order(message, user_data)
     phone = user_data.get("phone", "—")
 
     # Адрес — из профиля; комментарий — из последнего заказа в логе
@@ -1501,7 +1526,7 @@ async def finalize_order(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
     users = await load_users()
     prof = users.get(user_id, {}) or {}
-    name = (prof.get("full_name") or "").strip() or (message.from_user.full_name or "—")
+    name = display_contact_name_for_order(message, prof)
     address = (prof.get("last_address") or "").strip() or "—"
     phone = data.get("phone", "—")
     comment = data.get("comment", "—")
