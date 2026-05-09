@@ -14,6 +14,16 @@ def _get_env(name: str, required: bool = True) -> str | None:
     return value
 
 
+def _dispatcher_api_base(raw: str) -> str:
+    """Базовый URL API: без схемы подставляется https:// (частая опечатка в Railway)."""
+    u = (raw or "").strip().rstrip("/")
+    if not u:
+        return ""
+    if u.startswith(("http://", "https://")):
+        return u
+    return f"https://{u}"
+
+
 # Обязательные параметры
 API_TOKEN = _get_env("API_TOKEN")
 YOUGILE_API_KEY = _get_env("YOUGILE_API_KEY")
@@ -35,7 +45,7 @@ BOARD_ID = os.getenv("BOARD_ID", "")
 YOUGILE_WEBHOOK_SECRET = os.getenv("YOUGILE_WEBHOOK_SECRET", "")
 
 # Интеграция с «Диспетчер задач» (опционально)
-DISPATCHER_API_URL = os.getenv("DISPATCHER_API_URL", "").strip().rstrip("/")
+DISPATCHER_API_URL = _dispatcher_api_base(os.getenv("DISPATCHER_API_URL", ""))
 DISPATCHER_INBOUND_API_KEY = os.getenv("DISPATCHER_INBOUND_API_KEY", "").strip()
 DISPATCHER_GROUP_ID = os.getenv("DISPATCHER_GROUP_ID", "").strip()
 DISPATCHER_COMPANY_NAME = os.getenv("DISPATCHER_COMPANY_NAME", "").strip()
