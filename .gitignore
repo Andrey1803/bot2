@@ -8,6 +8,9 @@ data/users.json
 data/orders.log
 data/*.json
 data/*.log
+data/*.db
+clients.csv
+logs/
 
 # Python
 __pycache__/
