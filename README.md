@@ -62,6 +62,7 @@ cp .env.example .env
 | `DISPATCHER_GROUP_ID` | Целевая группа в диспетчере (приоритетный вариант) |
 | `DISPATCHER_COMPANY_NAME` | Имя компании для авто-создания/поиска, если `DISPATCHER_GROUP_ID` не задан |
 | `DISPATCHER_GROUP_NAME` | Имя группы при авто-создании (по умолчанию `Заявки Telegram`) |
+| `DISPATCHER_INBOUND_INITIAL_STATUS` | `PRELIMINARY` или `OPEN` — в какую колонку диспетчера класть заявку (если API поддерживает) |
 
 ### 5. Запуск
 

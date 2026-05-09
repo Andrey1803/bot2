@@ -39,3 +39,5 @@ DISPATCHER_INBOUND_API_KEY = os.getenv("DISPATCHER_INBOUND_API_KEY", "").strip()
 DISPATCHER_GROUP_ID = os.getenv("DISPATCHER_GROUP_ID", "").strip()
 DISPATCHER_COMPANY_NAME = os.getenv("DISPATCHER_COMPANY_NAME", "").strip()
 DISPATCHER_GROUP_NAME = os.getenv("DISPATCHER_GROUP_NAME", "").strip()
+# PRELIMINARY («Предварительно») или OPEN («К выполнению»); только если API поддерживает
+DISPATCHER_INBOUND_INITIAL_STATUS = os.getenv("DISPATCHER_INBOUND_INITIAL_STATUS", "").strip()
