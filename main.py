@@ -1259,28 +1259,52 @@ async def confirm_repeat_order(message: types.Message):
     async with aiofiles.open(ORDER_LOG, "a", encoding="utf-8") as f:
         await f.write(summary + "\n\n")
 
+    disp = send_order_to_dispatcher(
+        category="Повторный заказ",
+        name=name,
+        phone=phone,
+        address=address,
+        comment=comment,
+        telegram_user_id=str(message.from_user.id),
+        telegram_full_name=message.from_user.full_name or name,
+    )
+    task: dict = {}
+    yougile_err: Exception | None = None
     try:
         task = create_task(title=f"Повторный заказ от {name}", description=summary)
-        send_order_to_dispatcher(
-            category="Повторный заказ",
-            name=name,
-            phone=phone,
-            address=address,
-            comment=comment,
-            telegram_user_id=str(message.from_user.id),
-            telegram_full_name=message.from_user.full_name or name,
-        )
-        await message.answer(
-            f"✅ Повторный заказ принят!\n"
-            f"📋 ID задачи: <code>{task.get('id', '—')}</code>",
-            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
-        )
     except Exception as e:
         logger.exception("❌ Ошибка при создании задачи в YouGile")
-        await message.answer(
-            f"⚠️ Заказ принят, но ошибка в YouGile: {e}",
-            reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data)
-        )
+        yougile_err = e
+
+    if ADMIN_ID is not None and disp and not disp.get("ok") and not disp.get("skipped"):
+        try:
+            await bot.send_message(
+                ADMIN_ID,
+                f"⚠️ Повторный заказ: диспетчер не записал задачу\n<code>{disp.get('error', '—')}</code>",
+            )
+        except Exception as e:
+            logger.error("Не удалось уведомить админа о сбое диспетчера: %s", e)
+
+    lines = ["✅ Повторный заказ принят!"]
+    if disp.get("ok") and disp.get("taskId"):
+        lines.append(f"📋 Диспетчер: <code>{disp['taskId']}</code>")
+    elif not disp.get("skipped"):
+        lines.append("⚠️ Диспетчер: не удалось создать задачу (проверьте логи и .env).")
+    if task.get("id"):
+        lines.append(f"📋 YouGile: <code>{task['id']}</code>")
+    elif yougile_err:
+        lines.append(f"⚠️ YouGile: {yougile_err}")
+    if not disp.get("ok") and not task.get("id") and not disp.get("skipped"):
+        lines = [
+            "⚠️ Заказ зафиксирован у админа, но не записан ни в диспетчер, ни в YouGile.",
+            f"Ошибка YouGile: {yougile_err}" if yougile_err else "",
+        ]
+        lines = [x for x in lines if x]
+
+    await message.answer(
+        "\n".join(lines),
+        reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data),
+    )
 
     # Очищаем FSM
     await dp.storage.clear(chat_id=message.chat.id, user_id=message.from_user.id)
@@ -1496,44 +1520,58 @@ async def finalize_order(message: types.Message, state: FSMContext):
     async with aiofiles.open(ORDER_LOG, "a", encoding="utf-8") as f:
         await f.write(summary + "\n\n")
 
-    # Создаём задачу в YouGile
+    disp = send_order_to_dispatcher(
+        category=category,
+        name=name,
+        phone=phone,
+        address=address,
+        comment=comment,
+        telegram_user_id=str(message.from_user.id),
+        telegram_full_name=message.from_user.full_name or name,
+    )
+    task: dict = {}
+    yougile_err: Exception | None = None
     try:
-        task = create_task(
-            title=f"Заказ: {category} — {name}",
-            description=summary
-        )
-        send_order_to_dispatcher(
-            category=category,
-            name=name,
-            phone=phone,
-            address=address,
-            comment=comment,
-            telegram_user_id=str(message.from_user.id),
-            telegram_full_name=message.from_user.full_name or name,
-        )
-        task_id = task.get("id", "—")
-
-        # Сохраняем ID заказа в профиле
-        user_id = str(message.from_user.id)
-        await update_user_field(user_id, "last_order_id", task_id)
-
-        # Сохраняем имя в профиле
-        await update_user_field(user_id, "full_name", name)
-
-        # Сохраняем адрес в профиле
-        await update_user_field(user_id, "last_address", address)
-
-        response_text = (
-            f"✅ Спасибо! Ваш заказ принят и добавлен в YouGile.\n"
-            f"📋 ID задачи: <code>{task_id}</code>\n"
-            f"📝 Название: {task.get('title', '—')}"
-        )
+        task = create_task(title=f"Заказ: {category} — {name}", description=summary)
     except Exception as e:
         logger.exception("❌ Ошибка при создании задачи в YouGile")
-        response_text = (
-            f"⚠️ Заказ принят, но ошибка в YouGile: {e}\n"
-            f"Менеджер свяжется с вами вручную."
-        )
+        yougile_err = e
+
+    if ADMIN_ID is not None and disp and not disp.get("ok") and not disp.get("skipped"):
+        try:
+            await bot.send_message(
+                ADMIN_ID,
+                f"⚠️ Новый заказ из Telegram: диспетчер не записал задачу\n<code>{disp.get('error', '—')}</code>\n"
+                f"Клиент: {name}, {phone}",
+            )
+        except Exception as e:
+            logger.error("Не удалось уведомить админа о сбое диспетчера: %s", e)
+
+    user_id = str(message.from_user.id)
+    if task.get("id"):
+        await update_user_field(user_id, "last_order_id", task.get("id", "—"))
+        await update_user_field(user_id, "full_name", name)
+        await update_user_field(user_id, "last_address", address)
+
+    lines = ["✅ Спасибо! Ваш заказ принят."]
+    if disp.get("ok") and disp.get("taskId"):
+        lines.append(f"📋 Диспетчер задач: <code>{disp['taskId']}</code>")
+    elif not disp.get("skipped"):
+        lines.append("⚠️ Диспетчер: задача не создана (проверьте DISPATCHER_* на сервере бота и API).")
+    if task.get("id"):
+        lines.append(f"📋 YouGile: <code>{task['id']}</code>")
+        lines.append(f"📝 Название: {task.get('title', '—')}")
+    elif yougile_err:
+        lines.append(f"⚠️ YouGile: {yougile_err}")
+    if not disp.get("ok") and not task.get("id") and not disp.get("skipped"):
+        lines = [
+            "⚠️ Заказ принят, но не записан в диспетчер и не в YouGile.",
+            f"YouGile: {yougile_err}" if yougile_err else "",
+            "Менеджер свяжется с вами.",
+        ]
+        lines = [x for x in lines if x]
+
+    response_text = "\n".join(lines)
 
     users = await load_users()
     user_data = users.get(str(message.from_user.id), {})
