@@ -1288,6 +1288,9 @@ async def confirm_repeat_order(message: types.Message):
     lines = ["✅ Повторный заказ принят!"]
     if disp.get("ok") and disp.get("taskId"):
         lines.append(f"📋 Диспетчер: <code>{disp['taskId']}</code>")
+        _dg = disp.get("groupId")
+        if _dg:
+            lines.append(f"📂 Группа в Диспетчере (id): <code>{_dg}</code> — откройте её; иначе задача в другой бригаде.")
     elif not disp.get("skipped"):
         lines.append("⚠️ Диспетчер: не удалось создать задачу (проверьте логи и .env).")
     if task.get("id"):
@@ -1556,6 +1559,9 @@ async def finalize_order(message: types.Message, state: FSMContext):
     lines = ["✅ Спасибо! Ваш заказ принят."]
     if disp.get("ok") and disp.get("taskId"):
         lines.append(f"📋 Диспетчер задач: <code>{disp['taskId']}</code>")
+        _dg = disp.get("groupId")
+        if _dg:
+            lines.append(f"📂 Группа в Диспетчере (id): <code>{_dg}</code> — откройте её; иначе задача в другой бригаде.")
     elif not disp.get("skipped"):
         lines.append("⚠️ Диспетчер: задача не создана (проверьте DISPATCHER_* на сервере бота и API).")
     if task.get("id"):
