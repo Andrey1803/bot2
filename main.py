@@ -129,12 +129,10 @@ dp = Dispatcher(storage=MemoryStorage())
 
 # ─── FSM состояния ───────────────────────────────────────────────────────────
 class OrderForm(StatesGroup):
-    category = State()       # Выбор категории услуги
-    name = State()
+    category = State()  # Выбор категории услуги
     phone = State()
-    address = State()
     comment = State()
-    photo = State()          # Фото к заказу
+    photo = State()  # Фото к заказу (имя и адрес — только из профиля / «⚙️ Настройки»)
 
 
 class BroadcastForm(StatesGroup):
@@ -425,19 +423,46 @@ async def update_user_field(user_id: str, field: str, value):
         await save_users(users)
 
 
-async def prompt_address_step(message: types.Message, user_id: str) -> None:
-    """Шаг адреса: предлагаем последний сохранённый или просим ввести."""
+async def prompt_phone_step(message: types.Message, user_id: str) -> None:
+    """Предлагаем сохранённый телефон или просим ввести."""
     users = await load_users()
-    raw = (users.get(user_id, {}) or {}).get("last_address")
-    saved = raw.strip() if isinstance(raw, str) else ""
-    if saved:
+    user_data = users.get(user_id, {}) or {}
+    saved_phone = user_data.get("phone")
+    if saved_phone:
         await message.answer(
-            f"Адрес объекта: <b>{saved}</b>?\n"
-            "Введите другой адрес или отправьте «Да», чтобы оставить этот:",
+            f"Ваш телефон: <b>{saved_phone}</b>?\n"
+            "Введите новый или отправьте «Да»:",
             reply_markup=cancel_kb(),
         )
     else:
-        await message.answer("Введите адрес объекта:", reply_markup=cancel_kb())
+        await message.answer(
+            "Введите ваш телефон:\n"
+            "<i>(формат: +375XXXXXXXXX или 8XXXXXXXXXX)</i>",
+            reply_markup=cancel_kb(),
+        )
+
+
+async def prompt_comment_after_phone(message: types.Message, state: FSMContext, user_id: str) -> bool:
+    """После телефона: адрес должен быть в профиле, затем шаг комментария."""
+    users = await load_users()
+    raw = (users.get(user_id, {}) or {}).get("last_address")
+    if isinstance(raw, str) and raw.strip():
+        await state.set_state(OrderForm.comment)
+        await message.answer(
+            "Напишите комментарий к заказу:\n"
+            "<i>(или нажмите «⏭️ Пропустить»)</i>",
+            reply_markup=skip_inline_kb(),
+        )
+        return True
+    await state.clear()
+    await message.answer(
+        "Чтобы оформить заказ, укажите в профиле <b>адрес объекта</b>:\n"
+        "«⚙️ Настройки» → «📍 Изменить адрес».\n"
+        "Имя в заказе — «✏️ Изменить имя» там же.\n\n"
+        "После сохранения снова нажмите «🧾 Сделать заказ».",
+        reply_markup=await main_menu_kb_with_admin(user_id, users.get(user_id, {}) or {}),
+    )
+    return False
 
 
 # ─── Миграция старого формата ────────────────────────────────────────────────
@@ -1110,7 +1135,11 @@ async def cb_maint_order(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
     await callback.message.answer("🧾 Отлично! Выбирайте категорию услуги:")
     await state.set_state(OrderForm.category)
-    await callback.message.answer("Выберите тип услуги:", reply_markup=category_kb())
+    await callback.message.answer(
+        "Выберите тип услуги.\n"
+        "<i>Имя и адрес в заказе — из «⚙️ Настройки».</i>",
+        reply_markup=category_kb(),
+    )
 
 
 @dp.callback_query(F.data == "maint_profile")
@@ -1246,20 +1275,21 @@ async def confirm_repeat_order(message: types.Message):
     users = await load_users()
     user_data = users.get(user_id, {})
 
-    name = user_data.get("full_name", message.from_user.full_name)
+    name = (user_data.get("full_name") or "").strip() or (message.from_user.full_name or "—")
     phone = user_data.get("phone", "—")
 
-    # Ищем адрес и комментарий в последнем заказе
+    # Адрес — из профиля; комментарий — из последнего заказа в логе
     last_order = get_last_order(user_id)
-    address = "—"
+    address = (user_data.get("last_address") or "").strip() or "—"
     comment = "Повторный заказ"
     if last_order:
-        addr_match = re.search(r"📍 Адрес: (.+)", last_order["text"])
         comm_match = re.search(r"💬 Комментарий: (.+)", last_order["text"])
-        if addr_match:
-            address = addr_match.group(1)
         if comm_match and comm_match.group(1) != "—":
             comment = comm_match.group(1) + " (повтор)"
+        if address == "—":
+            addr_match = re.search(r"📍 Адрес: (.+)", last_order["text"])
+            if addr_match:
+                address = addr_match.group(1).strip()
 
     summary = (
         "🔄 <b>Повторный заказ</b>\n"
@@ -1346,8 +1376,9 @@ async def start_order(message: types.Message, state: FSMContext):
 
     await state.set_state(OrderForm.category)
     await message.answer(
-        "Выберите тип услуги:",
-        reply_markup=category_kb()
+        "Выберите тип услуги.\n"
+        "<i>Имя и адрес в заказе берутся из «⚙️ Настройки» (не нужно вводить каждый раз).</i>",
+        reply_markup=category_kb(),
     )
 
 
@@ -1358,58 +1389,9 @@ async def process_category(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(category=message.text)
-    await state.set_state(OrderForm.name)
-
-    users = await load_users()
-    user_id = str(message.from_user.id)
-    user_data = users.get(user_id, {})
-
-    # Если есть сохранённое имя — предлагаем его
-    saved_name = user_data.get("full_name")
-    if saved_name:
-        await message.answer(
-            f"Ваше имя: <b>{saved_name}</b>?\n"
-            "Введите новое или отправьте «Да»:",
-            reply_markup=cancel_kb()
-        )
-    else:
-        await message.answer("Введите ваше имя:", reply_markup=cancel_kb())
-
-
-@dp.message(OrderForm.name)
-async def process_name(message: types.Message, state: FSMContext):
-    name = message.text.strip()
-    if not name:
-        await message.answer("Имя не может быть пустым. Введите ваше имя:")
-        return
-    user_id = str(message.from_user.id)
-    users = await load_users()
-    saved_name = (users.get(user_id, {}) or {}).get("full_name")
-    if name.lower() in ("да", "yes", "ok"):
-        if not saved_name:
-            await message.answer("Сохранённого имени нет. Введите имя текстом:")
-            return
-        name = saved_name
-
-    await state.update_data(name=name)
     await state.set_state(OrderForm.phone)
-
-    # Фича 1: Если телефон уже сохранён — предлагаем его
-    user_data = users.get(user_id, {})
-    saved_phone = user_data.get("phone")
-
-    if saved_phone:
-        await message.answer(
-            f"Ваш телефон: <b>{saved_phone}</b>?\n"
-            "Введите новый или отправьте «Да»:",
-            reply_markup=cancel_kb()
-        )
-    else:
-        await message.answer(
-            "Введите ваш телефон:\n"
-            "<i>(формат: +375XXXXXXXXX или 8XXXXXXXXXX)</i>",
-            reply_markup=cancel_kb()
-        )
+    user_id = str(message.from_user.id)
+    await prompt_phone_step(message, user_id)
 
 
 @dp.message(OrderForm.phone)
@@ -1425,8 +1407,7 @@ async def process_phone(message: types.Message, state: FSMContext):
             await message.answer("У вас нет сохранённого телефона. Введите номер:")
             return
         await state.update_data(phone=phone)
-        await state.set_state(OrderForm.address)
-        await prompt_address_step(message, user_id)
+        await prompt_comment_after_phone(message, state, user_id)
         return
 
     if not phone_is_valid(phone):
@@ -1443,31 +1424,7 @@ async def process_phone(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
     await update_user_field(user_id, "phone", normalized)
 
-    await state.set_state(OrderForm.address)
-    await prompt_address_step(message, user_id)
-
-
-@dp.message(OrderForm.address)
-async def process_address(message: types.Message, state: FSMContext):
-    address = message.text.strip()
-    if not address:
-        await message.answer("Адрес не может быть пустым. Введите адрес:")
-        return
-    user_id = str(message.from_user.id)
-    if address.lower() in ("да", "yes", "ok"):
-        users = await load_users()
-        raw = (users.get(user_id, {}) or {}).get("last_address")
-        address = raw.strip() if isinstance(raw, str) else ""
-        if not address:
-            await message.answer("Нет сохранённого адреса. Введите адрес текстом:")
-            return
-    await state.update_data(address=address)
-    await state.set_state(OrderForm.comment)
-    await message.answer(
-        "Напишите комментарий к заказу:\n"
-        "<i>(или нажмите «⏭️ Пропустить»)</i>",
-        reply_markup=skip_inline_kb()
-    )
+    await prompt_comment_after_phone(message, state, user_id)
 
 
 @dp.message(OrderForm.comment)
@@ -1531,9 +1488,12 @@ async def finalize_order(message: types.Message, state: FSMContext):
     data = await state.get_data()
 
     category = SERVICE_CATEGORIES.get(data.get("category", ""), "Общее")
-    name = data.get("name", "—")
+    user_id = str(message.from_user.id)
+    users = await load_users()
+    prof = users.get(user_id, {}) or {}
+    name = (prof.get("full_name") or "").strip() or (message.from_user.full_name or "—")
+    address = (prof.get("last_address") or "").strip() or "—"
     phone = data.get("phone", "—")
-    address = data.get("address", "—")
     comment = data.get("comment", "—")
     photo_file_id = data.get("photo_file_id")
 
@@ -1589,11 +1549,8 @@ async def finalize_order(message: types.Message, state: FSMContext):
         except Exception as e:
             logger.error("Не удалось уведомить админа о сбое диспетчера: %s", e)
 
-    user_id = str(message.from_user.id)
     if task.get("id"):
         await update_user_field(user_id, "last_order_id", task.get("id", "—"))
-        await update_user_field(user_id, "full_name", name)
-        await update_user_field(user_id, "last_address", address)
 
     lines = ["✅ Спасибо! Ваш заказ принят."]
     if disp.get("ok") and disp.get("taskId"):
@@ -1618,9 +1575,8 @@ async def finalize_order(message: types.Message, state: FSMContext):
 
     response_text = "\n".join(lines)
 
-    users = await load_users()
-    user_data = users.get(str(message.from_user.id), {})
-    await message.answer(response_text, reply_markup=await main_menu_kb_with_admin(str(message.from_user.id), user_data))
+    user_data = users.get(user_id, {})
+    await message.answer(response_text, reply_markup=await main_menu_kb_with_admin(user_id, user_data))
     await state.clear()
 
 
@@ -1653,6 +1609,7 @@ async def btn_settings(message: types.Message):
         f"👤 Имя: <b>{name}</b>\n"
         f"📱 Телефон: <b>{phone}</b>\n"
         f"📍 Адрес: <b>{address}</b>\n\n"
+        f"Имя и адрес используются в заказах автоматически.\n"
         f"Выберите, что хотите изменить:"
     )
     await message.answer(text, reply_markup=settings_kb())
