@@ -1,0 +1,1642 @@
+2025-10-08 12:17:47,151 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:17:47,154 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:17:47,157 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:17:47,157 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:17:47,158 [INFO] Scheduler started
+2025-10-08 12:17:47,158 [INFO] Start polling
+2025-10-08 12:17:47,290 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:18:00,232 [INFO] Update id=573682002 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:18:11,270 [INFO] Update id=573682003 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:21:16,040 [INFO] Polling stopped
+2025-10-08 12:21:16,310 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:21:28,979 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:21:28,981 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:21:28,982 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:21:28,983 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:21:28,983 [INFO] Scheduler started
+2025-10-08 12:21:28,984 [INFO] Start polling
+2025-10-08 12:21:29,125 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:21:38,619 [INFO] Update id=573682004 is not handled. Duration 1 ms by bot id=7714875386
+2025-10-08 12:21:40,968 [INFO] Update id=573682005 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:24:03,854 [INFO] Polling stopped
+2025-10-08 12:24:04,116 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:24:15,147 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:24:15,148 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:24:15,150 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:24:15,151 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:24:15,151 [INFO] Scheduler started
+2025-10-08 12:24:15,152 [INFO] Start polling
+2025-10-08 12:24:15,282 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:24:23,192 [INFO] Update id=573682006 is not handled. Duration 1 ms by bot id=7714875386
+2025-10-08 12:25:22,159 [INFO] Update id=573682007 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:25:40,483 [INFO] Handled Message in 0.177s
+2025-10-08 12:25:40,484 [INFO] Update id=573682008 is handled. Duration 177 ms by bot id=7714875386
+2025-10-08 12:26:05,656 [INFO] Handled Message in 0.136s
+2025-10-08 12:26:05,656 [INFO] Update id=573682009 is handled. Duration 136 ms by bot id=7714875386
+2025-10-08 12:26:15,011 [INFO] Handled Message in 0.080s
+2025-10-08 12:26:15,012 [INFO] Update id=573682010 is handled. Duration 81 ms by bot id=7714875386
+2025-10-08 12:26:20,172 [INFO] Update id=573682011 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:28:11,436 [INFO] Polling stopped
+2025-10-08 12:28:11,689 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:28:58,955 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:28:58,956 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:28:58,958 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:28:58,958 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:28:58,959 [INFO] Scheduler started
+2025-10-08 12:28:58,959 [INFO] Start polling
+2025-10-08 12:28:59,148 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:29:03,113 [INFO] Update id=573682012 is not handled. Duration 1 ms by bot id=7714875386
+2025-10-08 12:29:11,012 [INFO] Update id=573682013 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:29:12,463 [INFO] Update id=573682014 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:30:26,586 [INFO] Update id=573682015 is not handled. Duration 60043 ms by bot id=7714875386
+2025-10-08 12:30:26,587 [ERROR] Cause exception while process update id=573682015 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1080, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1182, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ssl_shutdown_timeout=ssl_shutdown_timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1215, in _create_connection_transport
+    await waiter
+ConnectionAbortedError: SSL handshake is taking longer than 60.0 seconds: aborting the connection
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 657, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 564, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 975, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1350, in _create_direct_connection
+    raise last_exc
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1319, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1088, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 21, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\registration.py", line 21, in cmd_start
+    await message.answer("✅ Вы уже зарегистрированы.")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 12:35:33,769 [INFO] Polling stopped
+2025-10-08 12:35:34,033 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:42:58,158 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:42:58,159 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:42:58,161 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:42:58,161 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:42:58,162 [INFO] Scheduler started
+2025-10-08 12:42:58,162 [INFO] Start polling
+2025-10-08 12:42:58,311 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:43:10,602 [INFO] Handled Message in 0.201s
+2025-10-08 12:43:10,602 [INFO] Update id=573682016 is handled. Duration 201 ms by bot id=7714875386
+2025-10-08 12:43:15,103 [INFO] Update id=573682017 is not handled. Duration 1 ms by bot id=7714875386
+2025-10-08 12:46:03,123 [INFO] Polling stopped
+2025-10-08 12:46:03,382 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:46:13,710 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:46:13,711 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:46:13,714 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:46:13,714 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:46:13,714 [INFO] Scheduler started
+2025-10-08 12:46:13,715 [INFO] Start polling
+2025-10-08 12:46:14,150 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:46:20,350 [INFO] Update id=573682018 is not handled. Duration 1 ms by bot id=7714875386
+2025-10-08 12:47:48,923 [INFO] Polling stopped
+2025-10-08 12:47:49,182 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:47:58,876 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:47:58,878 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:47:58,880 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:47:58,881 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:47:58,881 [INFO] Scheduler started
+2025-10-08 12:47:58,882 [INFO] Start polling
+2025-10-08 12:47:59,018 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:48:34,099 [INFO] Handled Message in 0.211s
+2025-10-08 12:48:34,099 [INFO] Update id=573682019 is handled. Duration 213 ms by bot id=7714875386
+2025-10-08 12:50:10,281 [INFO] Polling stopped
+2025-10-08 12:50:10,534 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:50:20,901 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:50:20,903 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:50:20,906 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:50:20,907 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:50:20,907 [INFO] Scheduler started
+2025-10-08 12:50:20,908 [INFO] Start polling
+2025-10-08 12:50:21,068 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:50:26,428 [INFO] Handled Message in 0.212s
+2025-10-08 12:50:26,428 [INFO] Update id=573682020 is handled. Duration 212 ms by bot id=7714875386
+2025-10-08 12:50:30,766 [INFO] Handled Message in 0.058s
+2025-10-08 12:50:30,767 [INFO] Update id=573682021 is handled. Duration 59 ms by bot id=7714875386
+2025-10-08 12:50:35,256 [INFO] Update id=573682022 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 12:52:09,912 [INFO] Polling stopped
+2025-10-08 12:52:10,170 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:52:19,334 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:52:19,335 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 12:52:19,338 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 12:52:19,338 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 12:52:19,338 [INFO] Scheduler started
+2025-10-08 12:52:19,339 [INFO] Start polling
+2025-10-08 12:52:19,453 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 12:52:31,566 [INFO] Handled Message in 0.198s
+2025-10-08 12:52:31,566 [INFO] Update id=573682023 is handled. Duration 198 ms by bot id=7714875386
+2025-10-08 13:13:26,088 [INFO] Polling stopped
+2025-10-08 13:13:26,348 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:13:35,528 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:13:35,530 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:13:35,532 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 13:13:35,533 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 13:13:35,533 [INFO] Scheduler started
+2025-10-08 13:13:35,534 [INFO] Start polling
+2025-10-08 13:13:35,718 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:13:42,693 [INFO] Handled Message in 0.212s
+2025-10-08 13:13:42,693 [INFO] Update id=573682024 is handled. Duration 212 ms by bot id=7714875386
+2025-10-08 13:17:28,381 [INFO] Polling stopped
+2025-10-08 13:17:28,642 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:17:38,235 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:17:38,236 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:17:38,239 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 13:17:38,239 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 13:17:38,240 [INFO] Scheduler started
+2025-10-08 13:17:38,240 [INFO] Start polling
+2025-10-08 13:17:38,405 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:17:41,584 [INFO] Handled Message in 0.237s
+2025-10-08 13:17:41,584 [INFO] Update id=573682025 is handled. Duration 237 ms by bot id=7714875386
+2025-10-08 13:17:48,275 [INFO] Handled Message in 0.171s
+2025-10-08 13:17:48,276 [INFO] Update id=573682026 is handled. Duration 172 ms by bot id=7714875386
+2025-10-08 13:17:55,375 [INFO] Update id=573682027 is not handled. Duration 2 ms by bot id=7714875386
+2025-10-08 13:18:03,224 [INFO] Handled Message in 0.077s
+2025-10-08 13:18:03,224 [INFO] Update id=573682028 is handled. Duration 79 ms by bot id=7714875386
+2025-10-08 13:18:06,214 [INFO] Update id=573682029 is not handled. Duration 2 ms by bot id=7714875386
+2025-10-08 13:23:08,537 [INFO] Polling stopped
+2025-10-08 13:23:08,789 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:26:20,782 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:26:20,784 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:26:20,786 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 13:26:20,787 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 13:26:20,787 [INFO] Scheduler started
+2025-10-08 13:26:20,788 [INFO] Start polling
+2025-10-08 13:26:20,926 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:26:27,543 [INFO] Handled Message in 0.192s
+2025-10-08 13:26:27,544 [INFO] Update id=573682030 is handled. Duration 193 ms by bot id=7714875386
+2025-10-08 13:26:31,299 [INFO] Update id=573682031 is not handled. Duration 3 ms by bot id=7714875386
+2025-10-08 13:26:31,299 [ERROR] Cause exception while process update id=573682031 by bot id=7714875386
+TypeError: tuple indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 23, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\service_choice.py", line 30, in service_obsluzhivanie
+    name, phone = user["name"], user["phone"]
+                  ~~~~^^^^^^^^
+TypeError: tuple indices must be integers or slices, not str
+2025-10-08 13:32:01,677 [INFO] Polling stopped
+2025-10-08 13:32:01,936 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:32:33,583 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:32:33,585 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:32:33,587 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 13:32:33,588 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 13:32:33,588 [INFO] Scheduler started
+2025-10-08 13:32:33,589 [INFO] Start polling
+2025-10-08 13:32:33,833 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:32:40,320 [INFO] Handled Message in 0.211s
+2025-10-08 13:32:40,321 [INFO] Update id=573682032 is handled. Duration 211 ms by bot id=7714875386
+2025-10-08 13:32:46,240 [INFO] Handled Message in 0.438s
+2025-10-08 13:32:46,240 [INFO] Update id=573682033 is handled. Duration 439 ms by bot id=7714875386
+2025-10-08 13:34:10,047 [INFO] Update id=573682034 is not handled. Duration 60038 ms by bot id=7714875386
+2025-10-08 13:34:10,048 [ERROR] Cause exception while process update id=573682034 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1080, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1182, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ssl_shutdown_timeout=ssl_shutdown_timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1215, in _create_connection_transport
+    await waiter
+ConnectionAbortedError: SSL handshake is taking longer than 60.0 seconds: aborting the connection
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 657, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 564, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 975, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1350, in _create_direct_connection
+    raise last_exc
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1319, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1088, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 23, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\service_choice.py", line 55, in service_remont
+    await message.answer("✍️ Опишите проблему или задачу подробнее.")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 13:36:43,122 [INFO] Polling stopped
+2025-10-08 13:36:43,376 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:37:18,455 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:37:18,456 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 13:37:18,459 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 13:37:18,459 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 13:37:18,459 [INFO] Scheduler started
+2025-10-08 13:37:18,460 [INFO] Start polling
+2025-10-08 13:37:18,886 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 13:37:23,793 [INFO] Handled Message in 0.508s
+2025-10-08 13:37:23,794 [INFO] Update id=573682035 is handled. Duration 508 ms by bot id=7714875386
+2025-10-08 13:37:28,747 [INFO] Handled Message in 0.054s
+2025-10-08 13:37:28,748 [INFO] Update id=573682036 is handled. Duration 55 ms by bot id=7714875386
+2025-10-08 13:37:33,351 [INFO] Handled Message in 0.625s
+2025-10-08 13:37:33,352 [INFO] Update id=573682037 is handled. Duration 628 ms by bot id=7714875386
+2025-10-08 13:59:40,350 [INFO] Handled Message in 0.270s
+2025-10-08 13:59:40,350 [INFO] Update id=573682038 is handled. Duration 271 ms by bot id=7714875386
+2025-10-08 13:59:43,532 [INFO] Handled Message in 0.070s
+2025-10-08 13:59:43,532 [INFO] Update id=573682039 is handled. Duration 82 ms by bot id=7714875386
+2025-10-08 13:59:53,839 [INFO] Handled Message in 0.411s
+2025-10-08 13:59:53,839 [INFO] Update id=573682040 is handled. Duration 412 ms by bot id=7714875386
+2025-10-08 14:57:38,922 [INFO] Polling stopped
+2025-10-08 14:57:39,175 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 14:57:52,856 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 14:57:52,857 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 14:57:52,859 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 14:57:52,859 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 14:57:52,860 [INFO] Scheduler started
+2025-10-08 14:57:52,860 [INFO] Start polling
+2025-10-08 14:57:53,050 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 14:58:22,472 [INFO] Handled Message in 0.206s
+2025-10-08 14:58:22,473 [INFO] Update id=573682041 is handled. Duration 208 ms by bot id=7714875386
+2025-10-08 15:11:57,923 [INFO] Polling stopped
+2025-10-08 15:11:58,176 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:12:11,327 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:12:11,330 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:12:11,338 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:12:11,338 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:12:11,342 [INFO] Scheduler started
+2025-10-08 15:12:11,343 [INFO] Start polling
+2025-10-08 15:12:11,531 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:12:18,930 [INFO] Update id=573682042 is not handled. Duration 4 ms by bot id=7714875386
+2025-10-08 15:12:18,931 [ERROR] Cause exception while process update id=573682042 by bot id=7714875386
+OperationalError: no such column: address
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 22, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\admin.py", line 10, in list_users
+    users = await db.get_all_users()
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\db.py", line 75, in get_all_users
+    cur = await db.execute("SELECT tg_user_id, name, phone, address, created_at FROM users ORDER BY created_at ASC")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 193, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 132, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 115, in run
+    result = function()
+sqlite3.OperationalError: no such column: address
+2025-10-08 15:13:35,284 [INFO] Update id=573682043 is not handled. Duration 4 ms by bot id=7714875386
+2025-10-08 15:13:35,284 [ERROR] Cause exception while process update id=573682043 by bot id=7714875386
+OperationalError: no such column: u.address
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 22, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\admin.py", line 28, in list_due_users
+    due_users = await db.get_due_users_within_month()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\db.py", line 86, in get_due_users_within_month
+    cur = await db.execute(
+          ^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 193, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 132, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiosqlite\core.py", line 115, in run
+    result = function()
+sqlite3.OperationalError: no such column: u.address
+2025-10-08 15:17:21,216 [INFO] Polling stopped
+2025-10-08 15:17:21,470 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:17:43,150 [INFO] ✅ Колонка 'address' добавлена в таблицу users
+2025-10-08 15:17:43,529 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:17:43,531 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:17:43,532 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:17:43,533 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:17:43,533 [INFO] Scheduler started
+2025-10-08 15:17:43,534 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:17:43,534 [INFO] Start polling
+2025-10-08 15:17:43,702 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:17:49,442 [INFO] Handled Message in 0.155s
+2025-10-08 15:17:49,442 [INFO] Update id=573682044 is handled. Duration 157 ms by bot id=7714875386
+2025-10-08 15:17:59,975 [INFO] Handled Message in 0.068s
+2025-10-08 15:17:59,976 [INFO] Update id=573682045 is handled. Duration 71 ms by bot id=7714875386
+2025-10-08 15:18:18,715 [INFO] Handled Message in 0.166s
+2025-10-08 15:18:18,716 [INFO] Update id=573682046 is handled. Duration 166 ms by bot id=7714875386
+2025-10-08 15:20:27,791 [INFO] Polling stopped
+2025-10-08 15:20:28,057 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:20:39,586 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:20:39,588 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:20:39,590 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:20:39,590 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:20:39,590 [INFO] Scheduler started
+2025-10-08 15:20:39,591 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:20:39,591 [INFO] Start polling
+2025-10-08 15:20:40,202 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:22:27,918 [INFO] Polling stopped
+2025-10-08 15:22:28,182 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:22:42,001 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:22:42,003 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:22:42,005 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:22:42,005 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:22:42,005 [INFO] Scheduler started
+2025-10-08 15:22:42,006 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:22:42,007 [INFO] Start polling
+2025-10-08 15:23:42,071 [INFO] Polling stopped
+2025-10-08 15:28:09,340 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:28:09,341 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:28:09,343 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:28:09,343 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:28:09,343 [INFO] Scheduler started
+2025-10-08 15:28:09,344 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:28:09,344 [INFO] Start polling
+2025-10-08 15:28:09,512 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:34:02,272 [INFO] Polling stopped
+2025-10-08 15:34:02,525 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:34:14,039 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:34:14,040 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:34:14,042 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:34:14,043 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:34:14,043 [INFO] Scheduler started
+2025-10-08 15:34:14,044 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:34:14,044 [INFO] Start polling
+2025-10-08 15:34:14,193 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:36:50,567 [INFO] Polling stopped
+2025-10-08 15:36:50,819 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:37:01,168 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:37:01,170 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:37:01,172 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:37:01,172 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:37:01,172 [INFO] Scheduler started
+2025-10-08 15:37:01,173 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:37:01,173 [INFO] Start polling
+2025-10-08 15:37:01,300 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:37:12,520 [INFO] Handled Message in 0.175s
+2025-10-08 15:37:12,520 [INFO] Update id=573682047 is handled. Duration 176 ms by bot id=7714875386
+2025-10-08 15:37:23,373 [INFO] Handled Message in 0.080s
+2025-10-08 15:37:23,374 [INFO] Update id=573682048 is handled. Duration 81 ms by bot id=7714875386
+2025-10-08 15:37:35,715 [INFO] Handled Message in 0.063s
+2025-10-08 15:37:35,715 [INFO] Update id=573682049 is handled. Duration 63 ms by bot id=7714875386
+2025-10-08 15:37:43,539 [INFO] Handled Message in 0.053s
+2025-10-08 15:37:43,540 [INFO] Update id=573682050 is handled. Duration 54 ms by bot id=7714875386
+2025-10-08 15:37:54,123 [INFO] Handled Message in 0.083s
+2025-10-08 15:37:54,123 [INFO] Update id=573682051 is handled. Duration 84 ms by bot id=7714875386
+2025-10-08 15:39:38,669 [INFO] Handled Message in 0.149s
+2025-10-08 15:39:38,670 [INFO] Update id=573682052 is handled. Duration 152 ms by bot id=7714875386
+2025-10-08 15:47:11,128 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 15:47:11,129 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 15:47:22,269 [INFO] Connection established (tryings = 1, bot id = 7714875386)
+2025-10-08 15:47:26,553 [ERROR] Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-10-08 15:47:26,554 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 15:47:37,595 [INFO] Connection established (tryings = 1, bot id = 7714875386)
+2025-10-08 15:48:42,680 [INFO] Polling stopped
+2025-10-08 15:48:42,934 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:56:33,970 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:56:33,972 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 15:56:33,974 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 15:56:33,974 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 15:56:33,975 [INFO] Scheduler started
+2025-10-08 15:56:33,975 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 15:56:33,976 [INFO] Start polling
+2025-10-08 15:56:34,134 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 15:56:45,035 [INFO] Handled Message in 0.206s
+2025-10-08 15:56:45,035 [INFO] Update id=573682053 is handled. Duration 209 ms by bot id=7714875386
+2025-10-08 15:56:54,578 [INFO] Handled Message in 0.110s
+2025-10-08 15:56:54,578 [INFO] Update id=573682054 is handled. Duration 112 ms by bot id=7714875386
+2025-10-08 15:56:57,026 [INFO] Handled Message in 0.091s
+2025-10-08 15:56:57,026 [INFO] Update id=573682055 is handled. Duration 93 ms by bot id=7714875386
+2025-10-08 15:58:58,878 [INFO] Update id=573682056 is not handled. Duration 60057 ms by bot id=7714875386
+2025-10-08 15:58:59,091 [ERROR] Cause exception while process update id=573682056 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1080, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1182, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ssl_shutdown_timeout=ssl_shutdown_timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1215, in _create_connection_transport
+    await waiter
+ConnectionAbortedError: SSL handshake is taking longer than 60.0 seconds: aborting the connection
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 657, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 564, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 975, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1350, in _create_direct_connection
+    raise last_exc
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1319, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1088, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 24, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\registration.py", line 57, in cmd_start
+    await message.answer("👋 Добро пожаловать! Введите ваше имя:")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 15:59:30,894 [INFO] Handled Message in 0.220s
+2025-10-08 15:59:30,901 [INFO] Update id=573682057 is handled. Duration 228 ms by bot id=7714875386
+2025-10-08 16:06:18,328 [INFO] Polling stopped
+2025-10-08 16:06:18,585 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 16:06:44,343 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 16:06:44,345 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 16:06:44,347 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 16:06:44,347 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 16:06:44,347 [INFO] Scheduler started
+2025-10-08 16:06:44,348 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 16:06:44,348 [INFO] Start polling
+2025-10-08 16:06:44,474 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 16:06:52,430 [INFO] Handled Message in 0.203s
+2025-10-08 16:06:52,430 [INFO] Update id=573682058 is handled. Duration 205 ms by bot id=7714875386
+2025-10-08 16:08:31,103 [INFO] Update id=573682059 is not handled. Duration 60053 ms by bot id=7714875386
+2025-10-08 16:08:31,103 [ERROR] Cause exception while process update id=573682059 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1080, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1182, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ssl_shutdown_timeout=ssl_shutdown_timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1215, in _create_connection_transport
+    await waiter
+ConnectionAbortedError: SSL handshake is taking longer than 60.0 seconds: aborting the connection
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 657, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 564, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 975, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1350, in _create_direct_connection
+    raise last_exc
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1319, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1088, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 26, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\registration.py", line 57, in cmd_start
+    await message.answer("👋 Добро пожаловать! Введите ваше имя:")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 16:08:45,127 [INFO] Update id=573682060 is not handled. Duration 60086 ms by bot id=7714875386
+2025-10-08 16:09:05,759 [ERROR] Cause exception while process update id=573682060 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - Request timeout error
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 573, in _request
+    with timer:
+         ^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\helpers.py", line 713, in __exit__
+    raise asyncio.TimeoutError from None
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 26, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\registration.py", line 57, in cmd_start
+    await message.answer("👋 Добро пожаловать! Введите ваше имя:")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 186, in make_request
+    raise TelegramNetworkError(method=method, message="Request timeout error")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 16:39:03,072 [INFO] Polling stopped
+2025-10-08 16:39:03,325 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 16:41:25,613 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 16:41:25,614 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 16:41:25,616 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 16:41:25,617 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 16:41:25,617 [INFO] Scheduler started
+2025-10-08 16:41:25,617 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 16:41:25,618 [INFO] Start polling
+2025-10-08 16:41:25,787 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 16:41:33,522 [INFO] Handled Message in 0.232s
+2025-10-08 16:41:33,523 [INFO] Update id=573682061 is handled. Duration 235 ms by bot id=7714875386
+2025-10-08 16:42:55,283 [INFO] Handled Message in 0.180s
+2025-10-08 16:42:55,284 [INFO] Update id=573682062 is handled. Duration 181 ms by bot id=7714875386
+2025-10-08 16:43:01,184 [INFO] Handled Message in 0.102s
+2025-10-08 16:43:01,184 [INFO] Update id=573682063 is handled. Duration 103 ms by bot id=7714875386
+2025-10-08 16:43:09,582 [INFO] Handled Message in 0.072s
+2025-10-08 16:43:09,583 [INFO] Update id=573682064 is handled. Duration 73 ms by bot id=7714875386
+2025-10-08 16:43:14,545 [INFO] Handled Message in 0.088s
+2025-10-08 16:43:14,546 [INFO] Update id=573682065 is handled. Duration 90 ms by bot id=7714875386
+2025-10-08 16:43:21,520 [INFO] Handled Message in 0.090s
+2025-10-08 16:43:21,521 [INFO] Update id=573682066 is handled. Duration 93 ms by bot id=7714875386
+2025-10-08 16:55:52,046 [INFO] Handled Message in 0.181s
+2025-10-08 16:55:52,046 [INFO] Update id=573682067 is handled. Duration 186 ms by bot id=7714875386
+2025-10-08 17:34:44,948 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 17:34:44,949 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 17:34:45,967 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Сетевая папка недоступна. За информацией о разрешении проблем в сети обратитесь к справочной системе Windows]
+2025-10-08 17:34:45,967 [WARNING] Sleep for 1.224048 seconds and try again... (tryings = 1, bot id = 7714875386)
+2025-10-08 17:34:57,311 [INFO] Connection established (tryings = 2, bot id = 7714875386)
+2025-10-08 18:34:44,200 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 18:34:44,201 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 18:34:45,203 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Сетевая папка недоступна. За информацией о разрешении проблем в сети обратитесь к справочной системе Windows]
+2025-10-08 18:34:45,204 [WARNING] Sleep for 1.240167 seconds and try again... (tryings = 1, bot id = 7714875386)
+2025-10-08 18:34:46,460 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Сетевая папка недоступна. За информацией о разрешении проблем в сети обратитесь к справочной системе Windows]
+2025-10-08 18:34:46,460 [WARNING] Sleep for 1.598703 seconds and try again... (tryings = 2, bot id = 7714875386)
+2025-10-08 18:34:58,169 [INFO] Connection established (tryings = 3, bot id = 7714875386)
+2025-10-08 18:41:46,662 [INFO] Handled Message in 0.170s
+2025-10-08 18:56:45,908 [INFO] Update id=573682068 is handled. Duration 899448 ms by bot id=7714875386
+2025-10-08 18:56:45,913 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 18:56:45,914 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 18:56:49,060 [INFO] Polling stopped
+2025-10-08 18:56:49,312 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 18:57:11,104 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 18:57:11,106 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 18:57:11,108 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 18:57:11,108 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 18:57:11,108 [INFO] Scheduler started
+2025-10-08 18:57:11,108 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 18:57:11,109 [INFO] Start polling
+2025-10-08 18:57:11,235 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 18:58:01,131 [INFO] Handled Message in 0.218s
+2025-10-08 18:58:01,132 [INFO] Update id=573682069 is handled. Duration 221 ms by bot id=7714875386
+2025-10-08 19:09:53,654 [INFO] Polling stopped
+2025-10-08 19:09:53,713 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 1] [SSL: APPLICATION_DATA_AFTER_CLOSE_NOTIFY] application data after close notify (_ssl.c:2706)
+2025-10-08 19:09:53,714 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 19:09:53,906 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:10:05,892 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:10:05,894 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:10:05,896 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 19:10:05,896 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 19:10:05,897 [INFO] Scheduler started
+2025-10-08 19:10:05,897 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 19:10:05,897 [INFO] Start polling
+2025-10-08 19:10:06,035 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:10:19,816 [INFO] Handled Message in 7.489s
+2025-10-08 19:10:19,816 [INFO] Update id=573682070 is handled. Duration 7490 ms by bot id=7714875386
+2025-10-08 19:10:41,044 [INFO] Handled Message in 0.375s
+2025-10-08 19:10:41,045 [INFO] Update id=573682071 is handled. Duration 378 ms by bot id=7714875386
+2025-10-08 19:14:20,187 [INFO] Polling stopped
+2025-10-08 19:14:20,439 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:14:30,917 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:14:30,919 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:14:30,921 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 19:14:30,921 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 19:14:30,922 [INFO] Scheduler started
+2025-10-08 19:14:30,922 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 19:14:30,923 [INFO] Start polling
+2025-10-08 19:14:31,068 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:14:44,853 [INFO] Handled Message in 0.199s
+2025-10-08 19:14:44,854 [INFO] Update id=573682073 is handled. Duration 203 ms by bot id=7714875386
+2025-10-08 19:14:49,107 [INFO] Handled Message in 0.266s
+2025-10-08 19:14:49,107 [INFO] Update id=573682074 is handled. Duration 269 ms by bot id=7714875386
+2025-10-08 19:14:59,609 [INFO] Handled Message in 0.220s
+2025-10-08 19:14:59,610 [INFO] Update id=573682075 is handled. Duration 223 ms by bot id=7714875386
+2025-10-08 19:15:35,659 [INFO] Update id=573682072 is not handled. Duration 60355 ms by bot id=7714875386
+2025-10-08 19:15:35,660 [ERROR] Cause exception while process update id=573682072 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\service_choice.py", line 29, in service_obsluzhivanie
+    task = await yougile_api.create_task(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\yougile_api.py", line 60, in create_task
+    raise Exception(f"Ошибка {resp.status}: {data}")
+Exception: Ошибка 400: {'statusCode': 400, 'message': ['property projectId should not exist'], 'error': 'Bad Request'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 31, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\service_choice.py", line 54, in service_obsluzhivanie
+    await message.answer(f"❌ Ошибка при создании заявки: {e}")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 19:18:15,210 [INFO] Polling stopped
+2025-10-08 19:18:15,470 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:18:36,047 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:18:36,049 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:18:36,051 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 19:18:36,052 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 19:18:36,052 [INFO] Scheduler started
+2025-10-08 19:18:36,053 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 19:18:36,053 [INFO] Start polling
+2025-10-08 19:18:36,237 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:18:44,741 [INFO] Handled Message in 0.510s
+2025-10-08 19:18:44,742 [INFO] Update id=573682076 is handled. Duration 511 ms by bot id=7714875386
+2025-10-08 19:23:25,527 [INFO] Polling stopped
+2025-10-08 19:23:25,781 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:23:38,518 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:23:38,520 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 19:23:38,522 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 19:23:38,522 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 19:23:38,522 [INFO] Scheduler started
+2025-10-08 19:23:38,523 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 19:23:38,523 [INFO] Start polling
+2025-10-08 19:23:38,651 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 19:23:53,968 [INFO] Handled Message in 0.270s
+2025-10-08 19:23:53,969 [INFO] Update id=573682077 is handled. Duration 273 ms by bot id=7714875386
+2025-10-08 19:23:56,733 [INFO] Handled Message in 0.176s
+2025-10-08 19:23:56,733 [INFO] Update id=573682078 is handled. Duration 177 ms by bot id=7714875386
+2025-10-08 19:24:10,092 [INFO] Handled Message in 0.079s
+2025-10-08 19:24:10,093 [INFO] Update id=573682079 is handled. Duration 80 ms by bot id=7714875386
+2025-10-08 19:24:26,155 [INFO] Handled Message in 0.186s
+2025-10-08 19:24:26,155 [INFO] Update id=573682080 is handled. Duration 188 ms by bot id=7714875386
+2025-10-08 19:24:58,267 [INFO] Handled Message in 0.192s
+2025-10-08 19:24:58,268 [INFO] Update id=573682081 is handled. Duration 194 ms by bot id=7714875386
+2025-10-08 19:25:04,507 [INFO] Handled Message in 0.523s
+2025-10-08 19:25:04,508 [INFO] Update id=573682082 is handled. Duration 526 ms by bot id=7714875386
+2025-10-08 19:29:20,295 [INFO] Handled Message in 17.183s
+2025-10-08 19:29:20,296 [INFO] Update id=573682084 is handled. Duration 17184 ms by bot id=7714875386
+2025-10-08 19:29:27,077 [INFO] Update id=573682083 is not handled. Duration 60063 ms by bot id=7714875386
+2025-10-08 19:29:27,078 [ERROR] Cause exception while process update id=573682083 by bot id=7714875386
+TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1080, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1182, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ssl_shutdown_timeout=ssl_shutdown_timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1215, in _create_connection_transport
+    await waiter
+ConnectionAbortedError: SSL handshake is taking longer than 60.0 seconds: aborting the connection
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 1353, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\client.py", line 657, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 564, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 975, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1350, in _create_direct_connection
+    raise last_exc
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1319, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiohttp\connector.py", line 1088, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\main.py", line 31, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Мои документы\Рабочий стол\hobby\Projects\project2\handlers\registration.py", line 60, in cmd_start
+    await message.answer("👋 Добро пожаловать! Введите ваше имя:")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\bot.py", line 488, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\site-packages\aiogram\client\session\aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+2025-10-08 19:31:07,959 [INFO] Handled Message in 0.172s
+2025-10-08 19:31:07,959 [INFO] Update id=573682085 is handled. Duration 172 ms by bot id=7714875386
+2025-10-08 19:40:57,444 [INFO] Handled Message in 0.232s
+2025-10-08 19:40:57,444 [INFO] Update id=573682086 is handled. Duration 235 ms by bot id=7714875386
+2025-10-08 19:41:06,472 [INFO] Handled Message in 0.065s
+2025-10-08 19:41:06,472 [INFO] Update id=573682087 is handled. Duration 74 ms by bot id=7714875386
+2025-10-08 19:41:31,316 [INFO] Handled Message in 0.169s
+2025-10-08 19:41:31,316 [INFO] Update id=573682088 is handled. Duration 169 ms by bot id=7714875386
+2025-10-08 19:43:25,298 [INFO] Handled Message in 0.141s
+2025-10-08 19:43:25,299 [INFO] Update id=573682089 is handled. Duration 141 ms by bot id=7714875386
+2025-10-08 19:43:28,796 [INFO] Handled Message in 0.059s
+2025-10-08 19:43:28,797 [INFO] Update id=573682090 is handled. Duration 59 ms by bot id=7714875386
+2025-10-08 19:43:36,645 [INFO] Handled Message in 0.073s
+2025-10-08 19:43:36,646 [INFO] Update id=573682091 is handled. Duration 74 ms by bot id=7714875386
+2025-10-08 19:43:39,285 [INFO] Handled Message in 0.075s
+2025-10-08 19:43:39,286 [INFO] Update id=573682092 is handled. Duration 77 ms by bot id=7714875386
+2025-10-08 19:44:12,239 [INFO] Handled Message in 0.334s
+2025-10-08 19:44:12,240 [INFO] Update id=573682093 is handled. Duration 337 ms by bot id=7714875386
+2025-10-08 19:44:18,350 [INFO] Handled Message in 0.167s
+2025-10-08 19:44:18,350 [INFO] Update id=573682094 is handled. Duration 168 ms by bot id=7714875386
+2025-10-08 19:44:23,231 [INFO] Handled Message in 0.231s
+2025-10-08 19:44:23,232 [INFO] Update id=573682095 is handled. Duration 234 ms by bot id=7714875386
+2025-10-08 19:44:24,369 [INFO] Handled Message in 0.063s
+2025-10-08 19:44:24,370 [INFO] Update id=573682096 is handled. Duration 65 ms by bot id=7714875386
+2025-10-08 19:44:27,118 [INFO] Handled Message in 0.073s
+2025-10-08 19:44:27,119 [INFO] Update id=573682097 is handled. Duration 74 ms by bot id=7714875386
+2025-10-08 19:44:34,087 [INFO] Handled Message in 0.118s
+2025-10-08 19:44:34,088 [INFO] Update id=573682098 is handled. Duration 120 ms by bot id=7714875386
+2025-10-08 19:44:35,628 [INFO] Handled Message in 0.197s
+2025-10-08 19:44:35,629 [INFO] Update id=573682099 is handled. Duration 199 ms by bot id=7714875386
+2025-10-08 19:44:58,827 [INFO] Handled Message in 0.240s
+2025-10-08 19:44:58,827 [INFO] Update id=573682100 is handled. Duration 241 ms by bot id=7714875386
+2025-10-08 19:59:57,460 [INFO] Polling stopped
+2025-10-08 19:59:57,712 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 20:00:26,375 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 20:00:26,377 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 20:00:26,379 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 20:00:26,380 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 20:00:26,380 [INFO] Scheduler started
+2025-10-08 20:00:26,380 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 20:00:26,381 [INFO] Start polling
+2025-10-08 20:00:26,567 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 20:08:02,929 [INFO] Polling stopped
+2025-10-08 20:08:03,182 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 20:13:36,151 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 20:13:36,153 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 20:13:36,156 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 20:13:36,156 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 20:13:36,157 [INFO] Scheduler started
+2025-10-08 20:13:36,157 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 20:13:36,157 [INFO] Start polling
+2025-10-08 20:13:36,324 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 20:13:56,263 [INFO] Handled Message in 0.160s
+2025-10-08 20:13:56,264 [INFO] Update id=573682101 is handled. Duration 163 ms by bot id=7714875386
+2025-10-08 20:44:49,029 [INFO] Handled Message in 0.149s
+2025-10-08 20:44:49,029 [INFO] Update id=573682102 is handled. Duration 150 ms by bot id=7714875386
+2025-10-08 20:44:55,119 [INFO] Handled Message in 0.485s
+2025-10-08 20:44:55,119 [INFO] Update id=573682103 is handled. Duration 486 ms by bot id=7714875386
+2025-10-08 20:45:01,172 [INFO] Handled Message in 0.091s
+2025-10-08 20:45:01,173 [INFO] Update id=573682104 is handled. Duration 95 ms by bot id=7714875386
+2025-10-08 20:45:25,016 [INFO] Handled Message in 0.308s
+2025-10-08 20:45:25,017 [INFO] Update id=573682105 is handled. Duration 310 ms by bot id=7714875386
+2025-10-08 20:45:42,412 [INFO] Handled Message in 0.218s
+2025-10-08 20:45:42,413 [INFO] Update id=573682106 is handled. Duration 221 ms by bot id=7714875386
+2025-10-08 20:45:47,564 [INFO] Handled Message in 0.118s
+2025-10-08 20:45:47,564 [INFO] Update id=573682107 is handled. Duration 119 ms by bot id=7714875386
+2025-10-08 20:45:57,801 [INFO] Handled Message in 0.061s
+2025-10-08 20:45:57,801 [INFO] Update id=573682108 is handled. Duration 64 ms by bot id=7714875386
+2025-10-08 20:46:04,283 [INFO] Handled Message in 0.321s
+2025-10-08 20:46:04,310 [INFO] Update id=573682109 is handled. Duration 348 ms by bot id=7714875386
+2025-10-08 21:17:04,109 [ERROR] Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-10-08 21:17:04,110 [WARNING] Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7714875386)
+2025-10-08 21:17:15,239 [INFO] Connection established (tryings = 1, bot id = 7714875386)
+2025-10-08 21:33:35,015 [INFO] Polling stopped
+2025-10-08 21:33:35,269 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 21:33:50,701 [INFO] ✅ Колонка 'is_active' добавлена в таблицу users
+2025-10-08 21:33:51,190 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:33:51,191 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:33:51,193 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 21:33:51,193 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 21:33:51,193 [INFO] Scheduler started
+2025-10-08 21:33:51,193 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 21:33:51,194 [INFO] Start polling
+2025-10-08 21:33:51,353 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 21:34:12,573 [INFO] Handled Message in 0.210s
+2025-10-08 21:34:12,574 [INFO] Update id=573682110 is handled. Duration 216 ms by bot id=7714875386
+2025-10-08 21:48:15,647 [INFO] Polling stopped
+2025-10-08 21:48:15,900 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 21:48:58,243 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:48:58,245 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:48:58,247 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 21:48:58,247 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 21:48:58,247 [INFO] Scheduler started
+2025-10-08 21:48:58,248 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 21:48:58,248 [INFO] Start polling
+2025-10-08 21:49:59,108 [INFO] Polling stopped
+2025-10-08 21:51:05,328 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:51:05,330 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-08 21:51:05,332 [INFO] Added job "scheduled_archive" to job store "default"
+2025-10-08 21:51:05,332 [INFO] Added job "send_reminders" to job store "default"
+2025-10-08 21:51:05,332 [INFO] Scheduler started
+2025-10-08 21:51:05,333 [INFO] ✅ Бот запущен и готов к работе
+2025-10-08 21:51:05,333 [INFO] Start polling
+2025-10-08 21:51:05,525 [INFO] Run polling for bot @ServMateBot id=7714875386 - 'МастерСервис'
+2025-10-08 21:51:05,953 [INFO] Handled Message in 0.328s
+2025-10-08 21:51:05,953 [INFO] Update id=573682111 is handled. Duration 331 ms by bot id=7714875386
+2025-10-08 21:51:14,350 [INFO] Handled Message in 0.114s
+2025-10-08 21:51:14,351 [INFO] Update id=573682112 is handled. Duration 116 ms by bot id=7714875386
+2025-10-08 22:34:56,104 [INFO] Polling stopped
+2025-10-08 22:34:56,358 [INFO] Polling stopped for bot @ServMateBot id=7714875386 - 'МастерСервис'
