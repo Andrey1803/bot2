@@ -24,7 +24,11 @@ def create_task(title: str, description: str = ""):
     }
     response = requests.post(url, headers=_headers(), json=payload)
     if response.status_code in (200, 201):
-        return response.json()
+        data = response.json()
+        # YouGile часто возвращает только id без title — тогда в боте показывалось «Название: —»
+        if isinstance(data, dict) and not (data.get("title") or "").strip():
+            data["title"] = payload["title"]
+        return data
     else:
         raise Exception(f"{response.status_code} {response.text}")
 
