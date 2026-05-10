@@ -65,8 +65,80 @@ def _external_ref(*, telegram_user_id: str, address: str) -> str:
     return f"tg:{telegram_user_id}"
 
 
+def build_external_ref(telegram_user_id: str, address: str) -> str:
+    """Стабильный externalRef для inbound-order (как в send_order_to_dispatcher)."""
+    return _external_ref(telegram_user_id=telegram_user_id, address=address)
+
+
 def _enabled() -> bool:
     return bool(DISPATCHER_API_URL and DISPATCHER_INBOUND_API_KEY)
+
+
+def dispatcher_inbound_ready() -> bool:
+    """URL, ключ и маршрут (группа или компания) заданы."""
+    if not _enabled():
+        return False
+    return bool(DISPATCHER_GROUP_ID or DISPATCHER_COMPANY_NAME)
+
+
+def post_inbound_order_payload(payload: dict[str, Any], *, timeout_sec: float = 25) -> dict[str, Any]:
+    """
+    POST готового тела к /v1/integration/inbound-order.
+    Не бросает исключения; ответ как у send_order_to_dispatcher.
+    """
+    if not _enabled():
+        return {"ok": False, "skipped": True, "reason": "dispatcher_env_missing", "taskId": None, "error": None}
+
+    url = f"{DISPATCHER_API_URL}/v1/integration/inbound-order"
+    headers = {
+        "Authorization": f"Bearer {DISPATCHER_INBOUND_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    try:
+        logger.info("Dispatcher: POST inbound-order → %s", url)
+        resp = requests.post(url, headers=headers, json=payload, timeout=timeout_sec)
+        if resp.status_code in (200, 201):
+            data = resp.json()
+            if isinstance(data, dict):
+                tid = data.get("taskId")
+                logger.info("Dispatcher task created: %s", tid)
+                return {"ok": True, "skipped": False, "taskId": tid, "groupId": data.get("groupId"), "error": None, "raw": data}
+            logger.error("Dispatcher API: unexpected JSON shape: %s", str(data)[:300])
+            return {"ok": False, "skipped": False, "taskId": None, "error": "invalid_json_shape"}
+        err_text = (resp.text or "")[:800]
+        err_msg = err_text
+        try:
+            j = resp.json()
+            if isinstance(j, dict) and j.get("error"):
+                err_msg = str(j["error"])
+        except Exception:
+            pass
+        logger.error("Dispatcher API error: %s %s url=%s", resp.status_code, err_msg, url)
+        return {
+            "ok": False,
+            "skipped": False,
+            "taskId": None,
+            "error": f"HTTP {resp.status_code}: {err_msg}",
+            "status_code": resp.status_code,
+        }
+    except requests.RequestException as err:
+        logger.error(
+            "Dispatcher RequestException %s: %s url=%s",
+            type(err).__name__,
+            err,
+            url,
+            exc_info=True,
+        )
+        return {"ok": False, "skipped": False, "taskId": None, "error": f"{type(err).__name__}: {err}"}
+    except Exception as err:
+        logger.error(
+            "Dispatcher unexpected %s: %s url=%s",
+            type(err).__name__,
+            err,
+            url,
+            exc_info=True,
+        )
+        return {"ok": False, "skipped": False, "taskId": None, "error": str(err)}
 
 
 def send_order_to_dispatcher(
@@ -130,53 +202,4 @@ def send_order_to_dispatcher(
         if DISPATCHER_MAINTENANCE_NOTE:
             payload["maintenanceNote"] = DISPATCHER_MAINTENANCE_NOTE
 
-    url = f"{DISPATCHER_API_URL}/v1/integration/inbound-order"
-    headers = {
-        "Authorization": f"Bearer {DISPATCHER_INBOUND_API_KEY}",
-        "Content-Type": "application/json",
-    }
-    try:
-        logger.info("Dispatcher: POST inbound-order → %s", url)
-        resp = requests.post(url, headers=headers, json=payload, timeout=20)
-        if resp.status_code in (200, 201):
-            data = resp.json()
-            if isinstance(data, dict):
-                tid = data.get("taskId")
-                logger.info("Dispatcher task created: %s", tid)
-                return {"ok": True, "skipped": False, "taskId": tid, "groupId": data.get("groupId"), "error": None, "raw": data}
-            logger.error("Dispatcher API: unexpected JSON shape: %s", str(data)[:300])
-            return {"ok": False, "skipped": False, "taskId": None, "error": "invalid_json_shape"}
-        err_text = (resp.text or "")[:800]
-        err_msg = err_text
-        try:
-            j = resp.json()
-            if isinstance(j, dict) and j.get("error"):
-                err_msg = str(j["error"])
-        except Exception:
-            pass
-        logger.error("Dispatcher API error: %s %s url=%s", resp.status_code, err_msg, url)
-        return {
-            "ok": False,
-            "skipped": False,
-            "taskId": None,
-            "error": f"HTTP {resp.status_code}: {err_msg}",
-            "status_code": resp.status_code,
-        }
-    except requests.RequestException as err:
-        logger.error(
-            "Dispatcher RequestException %s: %s url=%s",
-            type(err).__name__,
-            err,
-            url,
-            exc_info=True,
-        )
-        return {"ok": False, "skipped": False, "taskId": None, "error": f"{type(err).__name__}: {err}"}
-    except Exception as err:
-        logger.error(
-            "Dispatcher unexpected %s: %s url=%s",
-            type(err).__name__,
-            err,
-            url,
-            exc_info=True,
-        )
-        return {"ok": False, "skipped": False, "taskId": None, "error": str(err)}
+    return post_inbound_order_payload(payload, timeout_sec=20)

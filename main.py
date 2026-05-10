@@ -24,6 +24,7 @@ from aiogram.client.default import DefaultBotProperties
 from config import API_TOKEN, ADMIN_ID, YOUGILE_WEBHOOK_SECRET
 from tools.yougile_api import create_task, search_tasks_by_user, get_tasks_for_stats, get_column_name
 from tools.dispatcher_api import send_order_to_dispatcher
+from tools.dispatcher_profiles_import import sync_missing_maintenance_dispatcher_cards
 
 import aiofiles
 
@@ -2404,6 +2405,29 @@ async def main():
     check_startup()
 
     await migrate_old_format()
+
+    try:
+        users = await load_users()
+        stats = await asyncio.to_thread(
+            sync_missing_maintenance_dispatcher_cards,
+            users,
+            calc_next_maintenance,
+        )
+        if stats.get("ran") and stats.get("created", 0) > 0:
+            await save_users(users)
+            logger.info(
+                "Диспетчер ТО: создано карточек=%s ошибок=%s",
+                stats.get("created"),
+                stats.get("failed"),
+            )
+        elif stats.get("ran") and stats.get("failed", 0) > 0:
+            logger.warning(
+                "Диспетчер ТО-синхрон: создано=%s ошибок=%s (users.json не менялся)",
+                stats.get("created"),
+                stats.get("failed"),
+            )
+    except Exception as e:
+        logger.exception("Диспетчер ТО-синхрон при старте: %s", e)
 
     # Обработчики сигналов (только Unix)
     loop = asyncio.get_event_loop()

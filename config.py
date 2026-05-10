@@ -70,3 +70,7 @@ DISPATCHER_MAINTENANCE_NEXT_DUE_YMD = os.getenv("DISPATCHER_MAINTENANCE_NEXT_DUE
 DISPATCHER_MAINTENANCE_NOTE = os.getenv("DISPATCHER_MAINTENANCE_NOTE", "").strip()
 # Стабильная привязка к объекту: externalRef = tg:<user_id>|<sha256 нормализованного адреса>[:16]
 DISPATCHER_EXTERNAL_REF_PER_ADDRESS = _env_truthy("DISPATCHER_EXTERNAL_REF_PER_ADDRESS")
+# При 1 (по умолчанию): при старте бота создать в диспетчере карточки ТО для пользователей из users.json без dispatcher_maint_task_id
+DISPATCHER_AUTO_SYNC_MAINTENANCE = not (
+    os.getenv("DISPATCHER_AUTO_SYNC_MAINTENANCE", "1").strip().lower() in ("0", "false", "no", "off")
+)
