@@ -19,6 +19,7 @@ from config import (
     DISPATCHER_MAINTENANCE_NEXT_DUE_YMD,
     DISPATCHER_MAINTENANCE_NOTE,
     DISPATCHER_MAINTENANCE_PLAN,
+    DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS,
 )
 
 logger = logging.getLogger(__name__)
@@ -79,6 +80,33 @@ def dispatcher_inbound_ready() -> bool:
     if not _enabled():
         return False
     return bool(DISPATCHER_GROUP_ID or DISPATCHER_COMPANY_NAME)
+
+
+def _days_until_ymd(due_ymd: str) -> int | None:
+    """(дата ТО − сегодня) в днях; отрицательно = просрочено. None если формат неверен."""
+    raw = (due_ymd or "").strip()
+    if not _YMD_RE.match(raw):
+        return None
+    y, mo, da = int(raw[0:4]), int(raw[5:7]), int(raw[8:10])
+    try:
+        due = date(y, mo, da)
+    except ValueError:
+        return None
+    return (due - date.today()).days
+
+
+def initial_status_for_maintenance_next_due(due_ymd: str) -> str:
+    """
+    Колонка «Предварительно» только если до следующего ТО осталось не больше
+    DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS дней (включая уже просроченные).
+    Иначе — «К выполнению» (OPEN).
+    """
+    d = _days_until_ymd(due_ymd)
+    if d is None:
+        return "OPEN"
+    if d <= DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS:
+        return "PRELIMINARY"
+    return "OPEN"
 
 
 def post_inbound_order_payload(payload: dict[str, Any], *, timeout_sec: float = 25) -> dict[str, Any]:
@@ -186,20 +214,22 @@ def send_order_to_dispatcher(
         )
         return {"ok": False, "skipped": True, "reason": "no_group_or_company", "taskId": None, "error": None}
 
-    st0 = DISPATCHER_INBOUND_INITIAL_STATUS.upper()
-    if st0 in ("PRELIMINARY", "OPEN"):
-        payload["initialStatus"] = st0
-
     if DISPATCHER_MAINTENANCE_PLAN:
         im = DISPATCHER_MAINTENANCE_INTERVAL_MONTHS
         payload["maintenanceEnabled"] = True
         payload["maintenanceIntervalMonths"] = im
         next_due = DISPATCHER_MAINTENANCE_NEXT_DUE_YMD
         if next_due and _YMD_RE.match(next_due):
-            payload["maintenanceNextDueYmd"] = next_due
+            next_ymd = next_due
         else:
-            payload["maintenanceNextDueYmd"] = _add_months_ymd(_local_today_ymd(), im)
+            next_ymd = _add_months_ymd(_local_today_ymd(), im)
+        payload["maintenanceNextDueYmd"] = next_ymd
         if DISPATCHER_MAINTENANCE_NOTE:
             payload["maintenanceNote"] = DISPATCHER_MAINTENANCE_NOTE
+        payload["initialStatus"] = initial_status_for_maintenance_next_due(next_ymd)
+    else:
+        st0 = DISPATCHER_INBOUND_INITIAL_STATUS.upper()
+        if st0 in ("PRELIMINARY", "OPEN"):
+            payload["initialStatus"] = st0
 
     return post_inbound_order_payload(payload, timeout_sec=20)

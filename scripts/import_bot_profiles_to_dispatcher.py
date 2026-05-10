@@ -40,6 +40,8 @@ try:
 except Exception:
     pass
 
+from tools.dispatcher_api import initial_status_for_maintenance_next_due
+
 
 def _next_to_ymd(joined_str: str | None) -> str | None:
     """Как calc_next_maintenance в main.py (без last_maintenance): joined + 6×30 дней."""
@@ -89,6 +91,7 @@ def _build_payload(uid: str, data: dict) -> dict | None:
         "maintenanceIntervalMonths": 6,
         "maintenanceNextDueYmd": next_ymd,
         "maintenanceNote": "Перенесено из бота (joined + 6 мес.×30 дн.)",
+        "initialStatus": initial_status_for_maintenance_next_due(next_ymd),
     }
     gid = (os.getenv("DISPATCHER_GROUP_ID") or "").strip()
     company = (os.getenv("DISPATCHER_COMPANY_NAME") or "").strip()

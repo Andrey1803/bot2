@@ -11,7 +11,6 @@ from config import (
     DISPATCHER_COMPANY_NAME,
     DISPATCHER_GROUP_ID,
     DISPATCHER_GROUP_NAME,
-    DISPATCHER_INBOUND_INITIAL_STATUS,
     DISPATCHER_MAINTENANCE_INTERVAL_MONTHS,
     DISPATCHER_MAINTENANCE_NOTE,
     DISPATCHER_MAINTENANCE_PLAN,
@@ -19,6 +18,7 @@ from config import (
 from tools.dispatcher_api import (
     build_external_ref,
     dispatcher_inbound_ready,
+    initial_status_for_maintenance_next_due,
     post_inbound_order_payload,
 )
 
@@ -102,9 +102,7 @@ def sync_missing_maintenance_dispatcher_cards(
             if DISPATCHER_GROUP_NAME:
                 payload["groupName"] = DISPATCHER_GROUP_NAME
 
-        st0 = DISPATCHER_INBOUND_INITIAL_STATUS.upper()
-        if st0 in ("PRELIMINARY", "OPEN"):
-            payload["initialStatus"] = st0
+        payload["initialStatus"] = initial_status_for_maintenance_next_due(next_ymd)
 
         res = post_inbound_order_payload(payload, timeout_sec=30)
         tid = res.get("taskId") if res.get("ok") else None

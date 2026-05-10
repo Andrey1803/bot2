@@ -66,6 +66,14 @@ try:
     )
 except ValueError:
     DISPATCHER_MAINTENANCE_INTERVAL_MONTHS = 6
+# Если до даты следующего ТО осталось не больше стольки дней (или срок уже прошёл) — initialStatus PRELIMINARY, иначе OPEN
+try:
+    DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS = max(
+        0,
+        min(365, int(os.getenv("DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS", "7") or "7")),
+    )
+except ValueError:
+    DISPATCHER_MAINTENANCE_PRELIMINARY_DAYS = 7
 DISPATCHER_MAINTENANCE_NEXT_DUE_YMD = os.getenv("DISPATCHER_MAINTENANCE_NEXT_DUE_YMD", "").strip()
 DISPATCHER_MAINTENANCE_NOTE = os.getenv("DISPATCHER_MAINTENANCE_NOTE", "").strip()
 # Стабильная привязка к объекту: externalRef = tg:<user_id>|<sha256 нормализованного адреса>[:16]
