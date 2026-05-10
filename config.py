@@ -52,3 +52,21 @@ DISPATCHER_COMPANY_NAME = os.getenv("DISPATCHER_COMPANY_NAME", "").strip()
 DISPATCHER_GROUP_NAME = os.getenv("DISPATCHER_GROUP_NAME", "").strip()
 # PRELIMINARY («Предварительно») или OPEN («К выполнению»); только если API поддерживает
 DISPATCHER_INBOUND_INITIAL_STATUS = os.getenv("DISPATCHER_INBOUND_INITIAL_STATUS", "").strip()
+
+# План ТО в диспетчере (поля maintenance* в POST /v1/integration/inbound-order)
+def _env_truthy(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
+DISPATCHER_MAINTENANCE_PLAN = _env_truthy("DISPATCHER_MAINTENANCE_PLAN")
+try:
+    DISPATCHER_MAINTENANCE_INTERVAL_MONTHS = max(
+        1,
+        min(120, int(os.getenv("DISPATCHER_MAINTENANCE_INTERVAL_MONTHS", "6") or "6")),
+    )
+except ValueError:
+    DISPATCHER_MAINTENANCE_INTERVAL_MONTHS = 6
+DISPATCHER_MAINTENANCE_NEXT_DUE_YMD = os.getenv("DISPATCHER_MAINTENANCE_NEXT_DUE_YMD", "").strip()
+DISPATCHER_MAINTENANCE_NOTE = os.getenv("DISPATCHER_MAINTENANCE_NOTE", "").strip()
+# Стабильная привязка к объекту: externalRef = tg:<user_id>|<sha256 нормализованного адреса>[:16]
+DISPATCHER_EXTERNAL_REF_PER_ADDRESS = _env_truthy("DISPATCHER_EXTERNAL_REF_PER_ADDRESS")

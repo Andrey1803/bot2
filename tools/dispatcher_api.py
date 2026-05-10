@@ -1,4 +1,8 @@
+import calendar
+import hashlib
 import logging
+import re
+from datetime import date
 from typing import Any
 
 import requests
@@ -6,13 +10,59 @@ import requests
 from config import (
     DISPATCHER_API_URL,
     DISPATCHER_COMPANY_NAME,
+    DISPATCHER_EXTERNAL_REF_PER_ADDRESS,
     DISPATCHER_GROUP_ID,
     DISPATCHER_GROUP_NAME,
     DISPATCHER_INBOUND_API_KEY,
     DISPATCHER_INBOUND_INITIAL_STATUS,
+    DISPATCHER_MAINTENANCE_INTERVAL_MONTHS,
+    DISPATCHER_MAINTENANCE_NEXT_DUE_YMD,
+    DISPATCHER_MAINTENANCE_NOTE,
+    DISPATCHER_MAINTENANCE_PLAN,
 )
 
 logger = logging.getLogger(__name__)
+
+_YMD_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _local_today_ymd() -> str:
+    t = date.today()
+    return f"{t.year:04d}-{t.month:02d}-{t.day:02d}"
+
+
+def _add_months_from_date(d: date, months: int) -> date:
+    month0 = d.month - 1 + months
+    year = d.year + month0 // 12
+    month = month0 % 12 + 1
+    last = calendar.monthrange(year, month)[1]
+    day = min(d.day, last)
+    return date(year, month, day)
+
+
+def _add_months_ymd(ymd: str, months: int) -> str:
+    raw = ymd.strip()
+    m = _YMD_RE.match(raw)
+    if not m:
+        return ymd
+    y, mo, da = int(raw[0:4]), int(raw[5:7]), int(raw[8:10])
+    out = _add_months_from_date(date(y, mo, da), months)
+    return f"{out.year:04d}-{out.month:02d}-{out.day:02d}"
+
+
+def _normalize_address_key(addr: str) -> str:
+    s = (addr or "").strip().lower()
+    s = re.sub(r"\s+", " ", s)
+    return s[:400]
+
+
+def _external_ref(*, telegram_user_id: str, address: str) -> str:
+    if DISPATCHER_EXTERNAL_REF_PER_ADDRESS:
+        norm = _normalize_address_key(address)
+        if norm and norm not in ("—", "-", "none", "нет"):
+            h = hashlib.sha256(norm.encode("utf-8")).hexdigest()[:16]
+            return f"tg:{telegram_user_id}|{h}"
+    return f"tg:{telegram_user_id}"
 
 
 def _enabled() -> bool:
@@ -49,7 +99,7 @@ def send_order_to_dispatcher(
         "customerPhone": phone or "",
         "objectAddress": address or "",
         "externalSource": "telegram",
-        "externalRef": f"tg:{telegram_user_id}",
+        "externalRef": _external_ref(telegram_user_id=telegram_user_id, address=address),
         "note": note,
     }
     if DISPATCHER_GROUP_ID:
@@ -67,6 +117,18 @@ def send_order_to_dispatcher(
     st0 = DISPATCHER_INBOUND_INITIAL_STATUS.upper()
     if st0 in ("PRELIMINARY", "OPEN"):
         payload["initialStatus"] = st0
+
+    if DISPATCHER_MAINTENANCE_PLAN:
+        im = DISPATCHER_MAINTENANCE_INTERVAL_MONTHS
+        payload["maintenanceEnabled"] = True
+        payload["maintenanceIntervalMonths"] = im
+        next_due = DISPATCHER_MAINTENANCE_NEXT_DUE_YMD
+        if next_due and _YMD_RE.match(next_due):
+            payload["maintenanceNextDueYmd"] = next_due
+        else:
+            payload["maintenanceNextDueYmd"] = _add_months_ymd(_local_today_ymd(), im)
+        if DISPATCHER_MAINTENANCE_NOTE:
+            payload["maintenanceNote"] = DISPATCHER_MAINTENANCE_NOTE
 
     url = f"{DISPATCHER_API_URL}/v1/integration/inbound-order"
     headers = {
