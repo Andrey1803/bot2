@@ -23,7 +23,13 @@ from aiogram.client.default import DefaultBotProperties
 
 from config import API_TOKEN, ADMIN_ID, YOUGILE_WEBHOOK_SECRET
 from tools.yougile_api import create_task, search_tasks_by_user, get_tasks_for_stats, get_column_name
-from tools.dispatcher_api import send_order_to_dispatcher
+from tools.dispatcher_api import (
+    describe_dispatcher_config,
+    dispatcher_inbound_ready,
+    format_dispatcher_result_for_admin,
+    ping_dispatcher_integration,
+    send_order_to_dispatcher,
+)
 from tools.dispatcher_profiles_import import sync_missing_maintenance_dispatcher_cards
 
 import aiofiles
@@ -559,6 +565,28 @@ def check_startup():
         logger.warning("⚠️ ADMIN_ID не задан! Бот не сможет уведомлять администратора.")
     else:
         logger.info(f"✅ ADMIN_ID: {ADMIN_ID}")
+    if dispatcher_inbound_ready():
+        logger.info("✅ Диспетчер: интеграция включена — %s", describe_dispatcher_config())
+    else:
+        logger.warning(
+            "⚠️ Диспетчер: заказы пойдут только в YouGile! %s",
+            describe_dispatcher_config(),
+        )
+
+
+async def _notify_admin_dispatcher_result(disp: dict, *, context: str) -> None:
+    """Уведомить админа о любом исходе (в т.ч. skipped — раньше молчали)."""
+    if ADMIN_ID is None:
+        return
+    if disp.get("ok") and disp.get("taskId"):
+        return
+    try:
+        await bot.send_message(
+            ADMIN_ID,
+            f"{context}\n{format_dispatcher_result_for_admin(disp)}",
+        )
+    except Exception as e:
+        logger.error("Не удалось уведомить админа о диспетчере: %s", e)
 
 
 # ─── Фича 6: Автоответчик вне рабочего времени ──────────────────────────────
@@ -577,6 +605,18 @@ async def check_work_hours(message: types.Message) -> bool:
 # ═════════════════════════════════════════════════════════════════════════════
 # ─── Обработчики команд ─────────────────────────────────────────────────────
 # ═════════════════════════════════════════════════════════════════════════════
+
+@dp.message(Command("dispatcher_ping"))
+async def cmd_dispatcher_ping(message: types.Message):
+    """Проверка связи бот → API диспетчера (inbound-order)."""
+    if str(message.from_user.id) != str(ADMIN_ID):
+        await message.answer("⛔ Только админ.")
+        return
+    await message.answer("Проверяю диспетчер…")
+    disp = await asyncio.to_thread(ping_dispatcher_integration)
+    lines = [format_dispatcher_result_for_admin(disp), "", "<i>Конфиг:</i>", describe_dispatcher_config()]
+    await message.answer("\n".join(lines))
+
 
 @dp.message(Command("restore"))
 async def cmd_restore(message: types.Message):
@@ -1375,14 +1415,7 @@ async def confirm_repeat_order(message: types.Message):
         logger.exception("❌ Ошибка при создании задачи в YouGile")
         yougile_err = e
 
-    if ADMIN_ID is not None and disp and not disp.get("ok") and not disp.get("skipped"):
-        try:
-            await bot.send_message(
-                ADMIN_ID,
-                f"⚠️ Повторный заказ: диспетчер не записал задачу\n<code>{disp.get('error', '—')}</code>",
-            )
-        except Exception as e:
-            logger.error("Не удалось уведомить админа о сбое диспетчера: %s", e)
+    await _notify_admin_dispatcher_result(disp, context="🔄 Повторный заказ")
 
     lines = ["✅ Повторный заказ принят!"]
     if disp.get("ok") and disp.get("taskId"):
@@ -1575,15 +1608,10 @@ async def finalize_order(message: types.Message, state: FSMContext):
         logger.exception("❌ Ошибка при создании задачи в YouGile")
         yougile_err = e
 
-    if ADMIN_ID is not None and disp and not disp.get("ok") and not disp.get("skipped"):
-        try:
-            await bot.send_message(
-                ADMIN_ID,
-                f"⚠️ Новый заказ из Telegram: диспетчер не записал задачу\n<code>{disp.get('error', '—')}</code>\n"
-                f"Клиент: {name}, {phone}",
-            )
-        except Exception as e:
-            logger.error("Не удалось уведомить админа о сбое диспетчера: %s", e)
+    await _notify_admin_dispatcher_result(
+        disp,
+        context=f"📦 Новый заказ ({category})\n👤 {name}, {phone}",
+    )
 
     if task.get("id"):
         await update_user_field(user_id, "last_order_id", task.get("id", "—"))

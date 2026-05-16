@@ -82,6 +82,77 @@ def dispatcher_inbound_ready() -> bool:
     return bool(DISPATCHER_GROUP_ID or DISPATCHER_COMPANY_NAME)
 
 
+def describe_dispatcher_config() -> str:
+    """Краткий статус интеграции для логов и /dispatcher_ping."""
+    parts: list[str] = []
+    if not DISPATCHER_API_URL:
+        parts.append("DISPATCHER_API_URL не задан")
+    else:
+        parts.append(f"URL={DISPATCHER_API_URL}")
+    if not DISPATCHER_INBOUND_API_KEY:
+        parts.append("DISPATCHER_INBOUND_API_KEY не задан")
+    elif len(DISPATCHER_INBOUND_API_KEY) < 16:
+        parts.append("ключ API < 16 символов (диспетчер отклонит)")
+    else:
+        parts.append("ключ API задан")
+    if DISPATCHER_GROUP_ID:
+        parts.append(f"groupId={DISPATCHER_GROUP_ID[:12]}…")
+    elif DISPATCHER_COMPANY_NAME:
+        gn = DISPATCHER_GROUP_NAME or "Заявки Telegram"
+        parts.append(f"company={DISPATCHER_COMPANY_NAME!r}, group={gn!r}")
+    else:
+        parts.append("нет DISPATCHER_GROUP_ID и DISPATCHER_COMPANY_NAME")
+    if DISPATCHER_MAINTENANCE_PLAN:
+        parts.append("MAINTENANCE_PLAN=on")
+    return "; ".join(parts)
+
+
+def format_dispatcher_result_for_admin(disp: dict[str, Any]) -> str:
+    """Текст для уведомления админа о результате send_order_to_dispatcher."""
+    if disp.get("skipped"):
+        reason = disp.get("reason") or "unknown"
+        hints = {
+            "dispatcher_env_missing": "задайте DISPATCHER_API_URL и DISPATCHER_INBOUND_API_KEY на Railway (бот)",
+            "no_group_or_company": "задайте DISPATCHER_GROUP_ID или DISPATCHER_COMPANY_NAME",
+        }
+        hint = hints.get(str(reason), describe_dispatcher_config())
+        return f"⚠️ Диспетчер пропущен ({reason}): {hint}"
+    if disp.get("ok") and disp.get("taskId"):
+        gid = disp.get("groupId")
+        extra = f"\n📂 groupId: <code>{gid}</code>" if gid else ""
+        return f"✅ Диспетчер: задача <code>{disp['taskId']}</code>{extra}"
+    err = disp.get("error") or "неизвестная ошибка"
+    return f"⚠️ Диспетчер не записал задачу: <code>{err}</code>"
+
+
+def ping_dispatcher_integration(*, timeout_sec: float = 15) -> dict[str, Any]:
+    """Тестовый POST inbound-order (заголовок TEST, не путать с реальным заказом)."""
+    if not dispatcher_inbound_ready():
+        return {
+            "ok": False,
+            "skipped": True,
+            "reason": "not_configured",
+            "error": describe_dispatcher_config(),
+        }
+    payload: dict[str, Any] = {
+        "title": "Тест интеграции Telegram→Диспетчер",
+        "contactName": "Тест",
+        "customerPhone": "+70000000000",
+        "objectAddress": "тест",
+        "externalSource": "telegram",
+        "externalRef": f"tg:ping:{int(__import__('time').time())}",
+        "note": "Автотест /dispatcher_ping",
+        "initialStatus": "PRELIMINARY",
+    }
+    if DISPATCHER_GROUP_ID:
+        payload["groupId"] = DISPATCHER_GROUP_ID
+    else:
+        payload["companyName"] = DISPATCHER_COMPANY_NAME
+        if DISPATCHER_GROUP_NAME:
+            payload["groupName"] = DISPATCHER_GROUP_NAME
+    return post_inbound_order_payload(payload, timeout_sec=timeout_sec)
+
+
 def _days_until_ymd(due_ymd: str) -> int | None:
     """(дата ТО − сегодня) в днях; отрицательно = просрочено. None если формат неверен."""
     raw = (due_ymd or "").strip()
